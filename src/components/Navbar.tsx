@@ -36,7 +36,7 @@ const Navbar = () => {
             <Link to="/services" className="text-agency-navy font-medium hover:text-agency-purple transition-colors">Services</Link>
             <Link to="/testimonials" className="text-agency-navy font-medium hover:text-agency-purple transition-colors">Results</Link>
             <Link to="/about" className="text-agency-navy font-medium hover:text-agency-purple transition-colors">About Us</Link>
-            <Link to="/contact" className="agency-btn">Book Free Call</Link>
+            <Link to="https://script.google.com/macros/s/AKfycbyBvSWS_w8ZO_1BCvom6Vy86X1zUwJ2kY3OHG9awwD34mTgF_36Ef818xulxehGCFq8/exec" className="agency-btn">Book Free Call</Link>
           </div>
 
           {/* Mobile menu button */}
