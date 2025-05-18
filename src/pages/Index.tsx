@@ -54,7 +54,7 @@ const Index = () => {
               </div>
             </div>
             <div className="md:w-1/2 opacity-0 animate-fade-in-delay-3">
-              <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&auto=format&fit=crop" alt="AdMaxify team meeting" className="rounded-lg shadow-xl" />
+              <img alt="AdMaxify team meeting" src="/lovable-uploads/6fbbdff1-a748-4c41-8b6a-4f6bc7641694.jpg" className="rounded-lg shadow-xl object-cover" />
             </div>
           </div>
         </div>
