@@ -59,7 +59,7 @@ const StatsCounter: React.FC<StatsCounterProps> = ({
   
   return (
     <div ref={countRef} className="font-bold text-4xl md:text-5xl text-agency-purple">
-      {prefix}{count}{suffix}
+      {prefix}{count.toLocaleString()}{suffix}
     </div>
   );
 };

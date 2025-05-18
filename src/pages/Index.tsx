@@ -10,6 +10,7 @@ import StatsCounter from '../components/StatsCounter';
 import ContactForm from '../components/ContactForm';
 import { services } from '../data/services';
 import { testimonials } from '../data/testimonials';
+
 const Index = () => {
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
@@ -244,15 +245,15 @@ const Index = () => {
                       <div className="border-b border-gray-200 h-0"></div>
                     </div>
                     
-                    {/* Graph Lines - Corrected to stay within bounds */}
+                    {/* Graph Lines - Fixed to stay within bounds */}
                     <div className="absolute inset-0">
                       {/* Industry Average Line */}
-                      <svg className="w-full h-full overflow-visible" viewBox="0 0 480 280" preserveAspectRatio="none">
+                      <svg className="w-full h-full" viewBox="0 0 480 280" preserveAspectRatio="none">
                         <path d="M0,252 L80,240 L160,228 L240,216 L320,210 L400,204 L480,198" fill="none" stroke="#D1D5DB" strokeWidth="3" />
                       </svg>
                       
                       {/* AdMaxify Performance Line */}
-                      <svg className="w-full h-full overflow-visible" viewBox="0 0 480 280" preserveAspectRatio="none">
+                      <svg className="w-full h-full" viewBox="0 0 480 280" preserveAspectRatio="none">
                         <path d="M0,252 L80,210 L160,168 L240,126 L320,84 L400,63 L480,42" fill="none" stroke="#9b87f5" strokeWidth="3" />
                         {/* Animated dot */}
                         <circle cx="480" cy="42" r="6" fill="#9b87f5" className="animate-pulse" />
@@ -394,4 +395,5 @@ const Index = () => {
       <Footer />
     </div>;
 };
+
 export default Index;
