@@ -34,7 +34,7 @@ const Index = () => {
       <Navbar />
       
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-agency-navy to-agency-charcoal text-white pt-32 pb-20 md:pt-44 md:pb-32">
+      <section className="bg-gradient-to-r from-agency-navy to-agency-charcoal text-white pt-32 pb-20 md:pt-44 md:pb-32 rounded-3xl">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row items-center">
             <div className="md:w-1/2 md:pr-12 mb-10 md:mb-0">
