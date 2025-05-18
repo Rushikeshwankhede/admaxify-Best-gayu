@@ -34,7 +34,7 @@ const Index = () => {
       <Navbar />
       
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-agency-navy to-agency-charcoal text-white pt-32 pb-20 md:pt-44 md:pb-32 rounded-3xl">
+      <section className="bg-gradient-to-r from-agency-navy to-agency-charcoal text-white pt-32 pb-20 md:pt-44 md:pb-32">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row items-center">
             <div className="md:w-1/2 md:pr-12 mb-10 md:mb-0">
@@ -54,7 +54,7 @@ const Index = () => {
               </div>
             </div>
             <div className="md:w-1/2 opacity-0 animate-fade-in-delay-3">
-              <img alt="AdMaxify team meeting" src="/lovable-uploads/6fbbdff1-a748-4c41-8b6a-4f6bc7641694.jpg" className="rounded-lg shadow-xl object-cover" />
+              <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&auto=format&fit=crop" alt="AdMaxify team meeting" className="rounded-lg shadow-xl" />
             </div>
           </div>
         </div>
