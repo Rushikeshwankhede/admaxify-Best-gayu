@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Star, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -25,7 +26,7 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const shortTestimonial = testimonial.substring(0, 150) + (testimonial.length > 150 ? '...' : '');
-  return <div className="agency-card h-full flex flex-col mx-[193px] rounded-3xl">
+  return <div className="agency-card h-full flex flex-col rounded-3xl">
       <div className="flex items-start mb-4">
         <img src={image} alt={name} className="w-16 h-16 rounded-full object-cover mr-4" />
         <div>
