@@ -1,7 +1,18 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronRight, Sparkles, Users, Target, BrainCircuit, ArrowRight, ChevronLeft, ChevronDown } from 'lucide-react';
+import { 
+  ChevronRight, 
+  Sparkles, 
+  Users, 
+  Target, 
+  BrainCircuit, 
+  ArrowRight, 
+  ChevronLeft, 
+  ChevronDown,
+  Mail,
+  Phone,
+  MapPin
+} from 'lucide-react';
 import { motion } from 'framer-motion';
 
 import Navbar from '../components/Navbar';
