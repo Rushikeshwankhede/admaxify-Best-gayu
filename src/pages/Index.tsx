@@ -1,40 +1,64 @@
+
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronRight, Sparkles, Users, Target, BrainCircuit, ArrowRight, ChevronLeft, ChevronDown, Mail, Phone, MapPin } from 'lucide-react';
+import { 
+  ChevronRight, 
+  Sparkles, 
+  Users, 
+  Target, 
+  BrainCircuit, 
+  ArrowRight, 
+  ChevronLeft, 
+  ChevronDown,
+  Mail,
+  Phone,
+  MapPin
+} from 'lucide-react';
 import { motion } from 'framer-motion';
+
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import ServiceCard from '../components/ServiceCard';
 import TestimonialCard from '../components/TestimonialCard';
 import StatsCounter from '../components/StatsCounter';
 import ContactForm from '../components/ContactForm';
+
 import { services } from '../data/services';
 import { testimonials } from '../data/testimonials';
+
 const Index = () => {
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
+  
   const featuredServices = services.slice(0, 3);
   const featuredTestimonials = testimonials.slice(0, 3);
+  
   useEffect(() => {
     setIsVisible(true);
   }, []);
+  
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentTestimonial(prev => (prev + 1) % featuredTestimonials.length);
+      setCurrentTestimonial((prev) => (prev + 1) % featuredTestimonials.length);
     }, 8000);
+    
     return () => clearInterval(interval);
   }, [featuredTestimonials.length]);
+  
   const nextTestimonial = () => {
-    setCurrentTestimonial(prev => (prev + 1) % featuredTestimonials.length);
+    setCurrentTestimonial((prev) => (prev + 1) % featuredTestimonials.length);
   };
+  
   const prevTestimonial = () => {
-    setCurrentTestimonial(prev => (prev - 1 + featuredTestimonials.length) % featuredTestimonials.length);
+    setCurrentTestimonial((prev) => (prev - 1 + featuredTestimonials.length) % featuredTestimonials.length);
   };
-  return <div className="min-h-screen">
+
+  return (
+    <div className="min-h-screen">
       <Navbar />
       
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-agency-navy to-agency-charcoal text-white pt-32 pb-20 md:pt-44 md:pb-32 rounded-3xl">
+      <section className="bg-gradient-to-r from-agency-navy to-agency-charcoal text-white pt-32 pb-20 md:pt-44 md:pb-32">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row items-center">
             <div className="md:w-1/2 md:pr-12 mb-10 md:mb-0">
@@ -54,7 +78,11 @@ const Index = () => {
               </div>
             </div>
             <div className="md:w-1/2 opacity-0 animate-fade-in-delay-3">
-              <img alt="AdMaxify team meeting" src="/lovable-uploads/6fbbdff1-a748-4c41-8b6a-4f6bc7641694.jpg" className="rounded-lg shadow-xl object-cover" />
+              <img 
+                src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&auto=format&fit=crop"
+                alt="AdMaxify team meeting" 
+                className="rounded-lg shadow-xl"
+              />
             </div>
           </div>
         </div>
@@ -121,7 +149,7 @@ const Index = () => {
       </section>
       
       {/* AI Marketing Section */}
-      <section className="section-padding text-white bg-neutral-800">
+      <section className="section-padding bg-agency-navy text-white">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row items-center">
             <div className="md:w-1/2 md:pr-12 mb-10 md:mb-0">
@@ -166,7 +194,11 @@ const Index = () => {
             </div>
             
             <div className="md:w-1/2">
-              <img alt="AI-powered marketing analytics" className="rounded-lg shadow-xl" src="/lovable-uploads/2c17e42b-791f-45d1-8d62-518e918e1070.jpg" />
+              <img 
+                src="https://images.unsplash.com/photo-1633613286848-e6f43bbafb8d?w=800&auto=format&fit=crop"
+                alt="AI-powered marketing analytics" 
+                className="rounded-lg shadow-xl"
+              />
             </div>
           </div>
         </div>
@@ -181,7 +213,15 @@ const Index = () => {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {featuredServices.map(service => <ServiceCard key={service.id} title={service.title} description={service.shortDescription} icon={<BrainCircuit size={24} className="text-agency-purple" />} link={`/services#service-${service.id}`} />)}
+            {featuredServices.map((service) => (
+              <ServiceCard
+                key={service.id}
+                title={service.title}
+                description={service.shortDescription}
+                icon={<BrainCircuit size={24} className="text-agency-purple" />}
+                link={`/services#service-${service.id}`}
+              />
+            ))}
           </div>
           
           <div className="text-center mt-12">
@@ -248,14 +288,30 @@ const Index = () => {
                     <div className="absolute inset-0">
                       {/* Industry Average Line */}
                       <svg className="w-full h-full overflow-visible" viewBox="0 0 480 280" preserveAspectRatio="none">
-                        <path d="M0,252 L80,240 L160,228 L240,216 L320,210 L400,204 L480,198" fill="none" stroke="#D1D5DB" strokeWidth="3" />
+                        <path
+                          d="M0,252 L80,240 L160,228 L240,216 L320,210 L400,204 L480,198"
+                          fill="none"
+                          stroke="#D1D5DB"
+                          strokeWidth="3"
+                        />
                       </svg>
                       
                       {/* AdMaxify Performance Line */}
                       <svg className="w-full h-full overflow-visible" viewBox="0 0 480 280" preserveAspectRatio="none">
-                        <path d="M0,252 L80,210 L160,168 L240,126 L320,84 L400,63 L480,42" fill="none" stroke="#9b87f5" strokeWidth="3" />
+                        <path
+                          d="M0,252 L80,210 L160,168 L240,126 L320,84 L400,63 L480,42"
+                          fill="none"
+                          stroke="#9b87f5"
+                          strokeWidth="3"
+                        />
                         {/* Animated dot */}
-                        <circle cx="480" cy="42" r="6" fill="#9b87f5" className="animate-pulse" />
+                        <circle
+                          cx="480"
+                          cy="42"
+                          r="6"
+                          fill="#9b87f5"
+                          className="animate-pulse"
+                        />
                       </svg>
                     </div>
                     
@@ -285,22 +341,50 @@ const Index = () => {
           </div>
           
           <div className="relative">
-            <div className="testimonial-carousel-inner" style={{
-            transform: `translateX(-${currentTestimonial * 100}%)`
-          }}>
-              {featuredTestimonials.map((testimonial, index) => <div key={testimonial.id} className="testimonial-item">
-                  <TestimonialCard id={testimonial.id} name={testimonial.name} company={testimonial.company} position={testimonial.position} image={testimonial.image} rating={testimonial.rating} testimonial={testimonial.testimonial} industry={testimonial.industry} resultSummary={testimonial.resultSummary} />
-                </div>)}
+            <div 
+              className="testimonial-carousel-inner"
+              style={{ transform: `translateX(-${currentTestimonial * 100}%)` }}
+            >
+              {featuredTestimonials.map((testimonial, index) => (
+                <div key={testimonial.id} className="testimonial-item">
+                  <TestimonialCard
+                    id={testimonial.id}
+                    name={testimonial.name}
+                    company={testimonial.company}
+                    position={testimonial.position}
+                    image={testimonial.image}
+                    rating={testimonial.rating}
+                    testimonial={testimonial.testimonial}
+                    industry={testimonial.industry}
+                    resultSummary={testimonial.resultSummary}
+                  />
+                </div>
+              ))}
             </div>
             
             <div className="flex justify-center mt-8 space-x-2">
-              <button onClick={prevTestimonial} className="p-2 rounded-full border border-gray-300 hover:bg-gray-100 transition-colors" aria-label="Previous testimonial">
+              <button 
+                onClick={prevTestimonial}
+                className="p-2 rounded-full border border-gray-300 hover:bg-gray-100 transition-colors"
+                aria-label="Previous testimonial"
+              >
                 <ChevronLeft size={20} />
               </button>
               
-              {featuredTestimonials.map((_, index) => <button key={index} onClick={() => setCurrentTestimonial(index)} className={`w-3 h-3 rounded-full ${currentTestimonial === index ? 'bg-agency-purple' : 'bg-gray-300'}`} aria-label={`Go to testimonial ${index + 1}`}></button>)}
+              {featuredTestimonials.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentTestimonial(index)}
+                  className={`w-3 h-3 rounded-full ${currentTestimonial === index ? 'bg-agency-purple' : 'bg-gray-300'}`}
+                  aria-label={`Go to testimonial ${index + 1}`}
+                ></button>
+              ))}
               
-              <button onClick={nextTestimonial} className="p-2 rounded-full border border-gray-300 hover:bg-gray-100 transition-colors" aria-label="Next testimonial">
+              <button 
+                onClick={nextTestimonial}
+                className="p-2 rounded-full border border-gray-300 hover:bg-gray-100 transition-colors"
+                aria-label="Next testimonial"
+              >
                 <ChevronRight size={20} />
               </button>
             </div>
@@ -367,16 +451,16 @@ const Index = () => {
                     <h4 className="font-bold text-lg">Follow Us</h4>
                     <div className="flex space-x-4 mt-2">
                       <a href="#" className="text-agency-navy hover:text-agency-purple transition-colors">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-instagram"><rect width="20" height="20" x="2" y="2" rx="5" ry="5" /><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" /><line x1="17.5" x2="17.51" y1="6.5" y2="6.5" /></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-instagram"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
                       </a>
                       <a href="#" className="text-agency-navy hover:text-agency-purple transition-colors">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-twitter"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z" /></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-twitter"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/></svg>
                       </a>
                       <a href="#" className="text-agency-navy hover:text-agency-purple transition-colors">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-linkedin"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" /><rect width="4" height="12" x="2" y="9" /><circle cx="4" cy="4" r="2" /></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-linkedin"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
                       </a>
                       <a href="#" className="text-agency-navy hover:text-agency-purple transition-colors">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-facebook"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" /></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-facebook"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
                       </a>
                     </div>
                   </div>
@@ -392,6 +476,8 @@ const Index = () => {
       </section>
       
       <Footer />
-    </div>;
+    </div>
+  );
 };
+
 export default Index;
