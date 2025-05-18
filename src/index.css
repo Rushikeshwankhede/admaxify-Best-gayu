@@ -1,3 +1,6 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -79,6 +82,7 @@
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
     --ring: 212.7 26.8% 83.9%;
+
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
@@ -94,8 +98,66 @@
   * {
     @apply border-border;
   }
-
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-montserrat;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-playfair;
+  }
+}
+
+@layer components {
+  .agency-btn {
+    @apply bg-agency-purple text-white font-medium py-3 px-6 rounded-md hover:bg-opacity-90 transition-all duration-300;
+  }
+  .agency-btn-outline {
+    @apply border-2 border-agency-purple text-agency-purple font-medium py-3 px-6 rounded-md hover:bg-agency-purple hover:text-white transition-all duration-300;
+  }
+  .agency-card {
+    @apply bg-white rounded-lg shadow-md p-6 hover:shadow-xl transition-shadow duration-300;
+  }
+  .section-padding {
+    @apply py-16 md:py-24;
+  }
+  .glass-card {
+    @apply bg-white bg-opacity-20 backdrop-blur-lg rounded-lg shadow-lg border border-white border-opacity-20;
+  }
+  
+  /* Count animation for statistics */
+  .stat-number {
+    @apply font-bold text-4xl md:text-5xl text-agency-purple;
+    counter-reset: stat var(--stat-value);
+  }
+  
+  .stat-number::after {
+    content: counter(stat);
+    animation: count-up 2s ease-out forwards;
+  }
+  
+  /* Mobile menu */
+  .mobile-nav-enter {
+    @apply opacity-0;
+  }
+  .mobile-nav-enter-active {
+    @apply opacity-100 transition-opacity duration-300;
+  }
+  .mobile-nav-exit {
+    @apply opacity-100;
+  }
+  .mobile-nav-exit-active {
+    @apply opacity-0 transition-opacity duration-300;
+  }
+  
+  /* Testimonial carousel */
+  .testimonial-carousel {
+    @apply overflow-hidden relative;
+  }
+  
+  .testimonial-carousel-inner {
+    @apply flex transition-transform duration-500 ease-out;
+  }
+  
+  .testimonial-item {
+    @apply min-w-full px-4;
   }
 }
