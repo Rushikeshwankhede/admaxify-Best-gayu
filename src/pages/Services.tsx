@@ -52,7 +52,7 @@ const Services = () => {
               
               <div>
                 <h2 className="text-2xl font-bold mb-2">{service.title}</h2>
-                <p className="text-gray-700 mb-4">{service.description}</p>
+                <p className="text-gray-700 mb-4">{service.shortDescription}</p>
                 
                 {service.features && service.features.length > 0 && (
                   <>

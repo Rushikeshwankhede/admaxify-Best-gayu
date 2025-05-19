@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronRight, Sparkles, Users, Target, BrainCircuit, ArrowRight, ChevronLeft, ChevronDown, Mail, Phone, MapPin } from 'lucide-react';
@@ -9,6 +8,7 @@ import ServiceCard from '../components/ServiceCard';
 import TestimonialCard from '../components/TestimonialCard';
 import StatsCounter from '../components/StatsCounter';
 import ContactForm from '../components/ContactForm';
+import ClientGrowthChart from '../components/ClientGrowthChart';
 import { services } from '../data/services';
 import { testimonials } from '../data/testimonials';
 
@@ -221,111 +221,9 @@ const Index = () => {
             <div className="mb-8">
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-xl font-bold">Average Client Growth</h3>
-                <div className="flex space-x-4">
-                  <span className="flex items-center">
-                    <span className="w-3 h-3 bg-agency-purple rounded-full inline-block mr-2"></span>
-                    Our Clients' Growth
-                  </span>
-                  <span className="flex items-center">
-                    <span className="w-3 h-3 bg-gray-300 rounded-full inline-block mr-2"></span>
-                    Industry Average
-                  </span>
-                </div>
               </div>
               
-              {/* Updated Graph Visualization based on provided image */}
-              <div className="h-80 w-full relative">
-                <div className="absolute bottom-0 left-0 w-full h-full flex">
-                  {/* Y-axis */}
-                  <div className="w-12 h-full flex flex-col justify-between text-sm text-gray-500 pr-2">
-                    <span>600</span>
-                    <span>450</span>
-                    <span>300</span>
-                    <span>150</span>
-                    <span>0</span>
-                  </div>
-                  
-                  {/* Graph Content */}
-                  <div className="flex-1 h-full relative overflow-hidden">
-                    {/* Grid lines */}
-                    <div className="absolute inset-0 flex flex-col justify-between">
-                      <div className="border-b border-gray-200 h-0"></div>
-                      <div className="border-b border-gray-200 h-0"></div>
-                      <div className="border-b border-gray-200 h-0"></div>
-                      <div className="border-b border-gray-200 h-0"></div>
-                      <div className="border-b border-gray-200 h-0"></div>
-                    </div>
-                    
-                    {/* Graph Lines - Contained within viewport */}
-                    <div className="absolute inset-0">
-                      {/* Industry Average Line (dashed) */}
-                      <svg className="w-full h-full" viewBox="0 0 1000 300" preserveAspectRatio="none">
-                        <path 
-                          d="M0,290 L83,280 L166,275 L250,265 L333,260 L417,250 L500,245 L583,240 L667,235 L750,230 L833,225 L917,220" 
-                          fill="none" 
-                          stroke="#D1D5DB" 
-                          strokeWidth="3" 
-                          strokeDasharray="5,5"
-                        />
-                      </svg>
-                      
-                      {/* Our Clients' Growth Line (solid) with dots */}
-                      <svg className="w-full h-full" viewBox="0 0 1000 300" preserveAspectRatio="none">
-                        <path 
-                          d="M0,270 L83,250 L166,220 L250,210 L333,170 L417,160 L500,140 L583,100 L667,70 L750,50 L833,30 L917,10" 
-                          fill="none" 
-                          stroke="#9b87f5" 
-                          strokeWidth="3" 
-                        />
-                        
-                        {/* Dots along the line */}
-                        <circle cx="0" cy="270" r="5" fill="#9b87f5" />
-                        <circle cx="83" cy="250" r="5" fill="#9b87f5" />
-                        <circle cx="166" cy="220" r="5" fill="#9b87f5" />
-                        <circle cx="250" cy="210" r="5" fill="#9b87f5" />
-                        <circle cx="333" cy="170" r="5" fill="#9b87f5" />
-                        <circle cx="417" cy="160" r="5" fill="#9b87f5" />
-                        <circle cx="500" cy="140" r="5" fill="#9b87f5" />
-                        <circle cx="583" cy="100" r="5" fill="#9b87f5" />
-                        <circle cx="667" cy="70" r="5" fill="#9b87f5" />
-                        <circle cx="750" cy="50" r="5" fill="#9b87f5" />
-                        <circle cx="833" cy="30" r="5" fill="#9b87f5" />
-                        <circle cx="917" cy="10" r="5" fill="#9b87f5" className="animate-pulse" />
-                      </svg>
-                    </div>
-                    
-                    {/* X-axis labels */}
-                    <div className="absolute bottom-0 left-0 w-full flex justify-between text-sm text-gray-500 transform translate-y-6">
-                      <span>Jan</span>
-                      <span>Feb</span>
-                      <span>Mar</span>
-                      <span>Apr</span>
-                      <span>May</span>
-                      <span>Jun</span>
-                      <span>Jul</span>
-                      <span>Aug</span>
-                      <span>Sep</span>
-                      <span>Oct</span>
-                      <span>Nov</span>
-                      <span>Dec</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              {/* Graph Legend - Bottom */}
-              <div className="mt-10 text-center">
-                <div className="flex items-center justify-center gap-6">
-                  <span className="flex items-center">
-                    <span className="w-3 h-3 bg-agency-purple rounded-full inline-block mr-2"></span>
-                    Our Clients' Growth
-                  </span>
-                  <span className="flex items-center">
-                    <span className="w-3 h-3 bg-gray-300 rounded-full inline-block mr-2"></span>
-                    Industry Average
-                  </span>
-                </div>
-              </div>
+              <ClientGrowthChart />
             </div>
           </div>
         </div>
