@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { BrainCircuit } from 'lucide-react';
 import Navbar from '../components/Navbar';
@@ -13,7 +14,7 @@ const Services = () => {
     });
   };
 
-  // Fix the document.querySelector() issue in handleScrollToService function
+  // Handle scrolling to service details when "Learn More" is clicked
   const handleScrollToService = (id: string) => {
     const element = document.querySelector(`#service-${id}`);
     if (element) {
@@ -22,7 +23,7 @@ const Services = () => {
   };
 
   return (
-    
+    <>
       <Helmet>
         <title>AdMaxify - Our Services</title>
         <meta name="description" content="Explore AdMaxify's comprehensive suite of AI-powered digital marketing services designed to elevate your brand and drive measurable results." />
@@ -44,33 +45,34 @@ const Services = () => {
       <section className="py-16">
         <div className="container mx-auto px-4">
           {services.map(service => (
-            
-              <div id={`service-${service.id}`} className="md:flex md:items-center space-y-4 md:space-y-0 md:space-x-6 mb-12 last:mb-0">
-                
-                  <div className="bg-agency-softPurple p-4 rounded-lg md:w-32 md:h-32 flex items-center justify-center">
-                    <BrainCircuit size={48} className="text-agency-purple" />
-                  </div>
-                
-                
-                  <div>
-                    <h2 className="text-2xl font-bold mb-2">{service.title}</h2>
-                    <p className="text-gray-700 mb-4">{service.description}</p>
-                    
-                      {service.features && service.features.length > 0 && (
-                        
-                          <h3 className="font-bold mb-2">Key Features:</h3>
-                          <ul className="list-disc list-inside text-gray-600">
-                            {service.features.map((feature, index) => (
-                              <li key={index}>{feature}</li>
-                            ))}
-                          </ul>
-                        
-                      )}
-                    
-                  </div>
-                
+            <div key={service.id} id={`service-${service.id}`} className="md:flex md:items-center space-y-4 md:space-y-0 md:space-x-6 mb-12 last:mb-0">
+              <div className="bg-agency-softPurple p-4 rounded-lg md:w-32 md:h-32 flex items-center justify-center">
+                <BrainCircuit size={48} className="text-agency-purple" />
               </div>
-            
+              
+              <div>
+                <h2 className="text-2xl font-bold mb-2">{service.title}</h2>
+                <p className="text-gray-700 mb-4">{service.description}</p>
+                
+                {service.features && service.features.length > 0 && (
+                  <>
+                    <h3 className="font-bold mb-2">Key Features:</h3>
+                    <ul className="list-disc list-inside text-gray-600">
+                      {service.features.map((feature, index) => (
+                        <li key={index}>{feature}</li>
+                      ))}
+                    </ul>
+                  </>
+                )}
+                
+                <button 
+                  onClick={() => handleScrollToService(service.id)} 
+                  className="mt-4 text-agency-purple font-medium hover:underline"
+                >
+                  Learn More
+                </button>
+              </div>
+            </div>
           ))}
         </div>
       </section>
@@ -82,7 +84,7 @@ const Services = () => {
       </section>
       
       <Footer />
-    
+    </>
   );
 };
 

@@ -37,19 +37,14 @@ const Navbar = () => {
             <Link to="/testimonials" className="text-agency-navy font-medium hover:text-agency-purple transition-colors">Results</Link>
             <Link to="/about" className="text-agency-navy font-medium hover:text-agency-purple transition-colors">About Us</Link>
             <Link to="/contact" className="text-agency-navy font-medium hover:text-agency-purple transition-colors px-4 py-2 border border-agency-purple rounded-md">Contact Us</Link>
-
-{/* ============================================================================================================================================= */}
-
-
-            
-          {/*  <Link to="https://script.google.com/macros/s/AKfycbyBvSWS_w8ZO_1BCvom6Vy86X1zUwJ2kY3OHG9awwD34mTgF_36Ef818xulxehGCFq8/exec" className="agency-btn">Book Free Call</Link> */}
-         
-          <a href="https://script.google.com/macros/s/AKfycbyBvSWS_w8ZO_1BCvom6Vy86X1zUwJ2kY3OHG9awwD34mTgF_36Ef818xulxehGCFq8/exec" className="agency-btn" target="_blank" rel="noopener noreferrer">Book Free Call</a>
-
-
-
-            
-{/* ============================================================================================================================================= */}
+            <a 
+              href="https://script.google.com/macros/s/AKfycbyBvSWS_w8ZO_1BCvom6Vy86X1zUwJ2kY3OHG9awwD34mTgF_36Ef818xulxehGCFq8/exec" 
+              className="agency-btn" 
+              target="_blank" 
+              rel="noopener noreferrer"
+            >
+              Book Free Call
+            </a>
           </div>
 
           {/* Mobile menu button */}
@@ -70,26 +65,15 @@ const Navbar = () => {
             <Link to="/testimonials" className="text-xl font-medium text-agency-navy hover:text-agency-purple" onClick={() => setIsMenuOpen(false)}>Results</Link>
             <Link to="/about" className="text-xl font-medium text-agency-navy hover:text-agency-purple" onClick={() => setIsMenuOpen(false)}>About Us</Link>
             <Link to="/contact" className="text-xl font-medium text-agency-navy hover:text-agency-purple" onClick={() => setIsMenuOpen(false)}>Contact Us</Link>
-
-
-
-
-{/* ============================================================================================================================================= */}
-
-
-
-            
-            
-         {/*    <Link to="/contact" className="agency-btn text-center" onClick={() => setIsMenuOpen(false)}>Book Free Call</Link>  */}
-
-<a href="https://script.google.com/macros/s/AKfycbyBvSWS_w8ZO_1BCvom6Vy86X1zUwJ2kY3OHG9awwD34mTgF_36Ef818xulxehGCFq8/exec" className="agency-btn text-center" target="_blank" rel="noopener noreferrer" onClick={() => setIsMenuOpen(false)}>Book Free Call</a>
-
-
-
-
-{/* ============================================================================================================================================= */}
-
-            
+            <a 
+              href="https://script.google.com/macros/s/AKfycbyBvSWS_w8ZO_1BCvom6Vy86X1zUwJ2kY3OHG9awwD34mTgF_36Ef818xulxehGCFq8/exec" 
+              className="agency-btn text-center" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Book Free Call
+            </a>
           </div>
         </div>
       )}
