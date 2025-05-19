@@ -81,19 +81,19 @@ const Index = () => {
               <p className="text-gray-600 font-medium">Client Satisfaction</p>
             </div>
             <div className="space-y-2">
-              <StatsCounter value={1250} suffix="+" />
+              <StatsCounter value={2750} suffix="+" />
               <p className="text-gray-600 font-medium">Campaigns Launched</p>
             </div>
             <div className="space-y-2">
-              <StatsCounter value={324} suffix="%" prefix="+" />
+              <StatsCounter value={17} suffix="X" prefix="+" />
               <p className="text-gray-600 font-medium">Average ROI</p>
             </div>
             <div className="space-y-2">
-              <StatsCounter value={50} suffix="+" />
+              <StatsCounter value={150} suffix="+" />
               <p className="text-gray-600 font-medium">AI Models Utilized</p>
             </div>
             <div className="space-y-2">
-              <StatsCounter value={600} suffix="+" />
+              <StatsCounter value={1200} suffix="+" />
               <p className="text-gray-600 font-medium">Satisfied Clients</p>
             </div>
           </div>
