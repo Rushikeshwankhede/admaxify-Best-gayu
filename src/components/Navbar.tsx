@@ -31,11 +31,12 @@ const Navbar = () => {
           </Link>
 
           {/* Desktop Menu */}
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden md:flex items-center space-x-4">
             <Link to="/" className="text-agency-navy font-medium hover:text-agency-purple transition-colors">Home</Link>
             <Link to="/services" className="text-agency-navy font-medium hover:text-agency-purple transition-colors">Services</Link>
             <Link to="/testimonials" className="text-agency-navy font-medium hover:text-agency-purple transition-colors">Results</Link>
             <Link to="/about" className="text-agency-navy font-medium hover:text-agency-purple transition-colors">About Us</Link>
+            <Link to="/contact" className="text-agency-navy font-medium hover:text-agency-purple transition-colors px-4 py-2 border border-agency-purple rounded-md">Contact Us</Link>
             <Link to="https://script.google.com/macros/s/AKfycbyBvSWS_w8ZO_1BCvom6Vy86X1zUwJ2kY3OHG9awwD34mTgF_36Ef818xulxehGCFq8/exec" className="agency-btn">Book Free Call</Link>
           </div>
 
@@ -56,6 +57,7 @@ const Navbar = () => {
             <Link to="/services" className="text-xl font-medium text-agency-navy hover:text-agency-purple" onClick={() => setIsMenuOpen(false)}>Services</Link>
             <Link to="/testimonials" className="text-xl font-medium text-agency-navy hover:text-agency-purple" onClick={() => setIsMenuOpen(false)}>Results</Link>
             <Link to="/about" className="text-xl font-medium text-agency-navy hover:text-agency-purple" onClick={() => setIsMenuOpen(false)}>About Us</Link>
+            <Link to="/contact" className="text-xl font-medium text-agency-navy hover:text-agency-purple" onClick={() => setIsMenuOpen(false)}>Contact Us</Link>
             <Link to="/contact" className="agency-btn text-center" onClick={() => setIsMenuOpen(false)}>Book Free Call</Link>
           </div>
         </div>

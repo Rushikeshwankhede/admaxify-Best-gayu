@@ -218,7 +218,7 @@ const Index = () => {
                 </div>
               </div>
               
-              {/* Graph Visualization */}
+              {/* Graph Visualization - Fixed version */}
               <div className="h-80 w-full relative">
                 <div className="absolute bottom-0 left-0 w-full h-full flex">
                   {/* Y-axis */}
@@ -233,7 +233,7 @@ const Index = () => {
                   </div>
                   
                   {/* Graph Content */}
-                  <div className="flex-1 h-full relative">
+                  <div className="flex-1 h-full relative overflow-hidden">
                     {/* Grid lines */}
                     <div className="absolute inset-0 flex flex-col justify-between">
                       <div className="border-b border-gray-200 h-0"></div>
@@ -285,7 +285,7 @@ const Index = () => {
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">See what our clients have to say about working with AdMaxify.</p>
           </div>
           
-          <div className="relative">
+          <div className="relative max-w-full overflow-hidden">
             <div className="testimonial-carousel-inner" style={{
             transform: `translateX(-${currentTestimonial * 100}%)`
           }}>

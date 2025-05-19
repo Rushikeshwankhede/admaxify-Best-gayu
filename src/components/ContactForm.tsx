@@ -6,7 +6,6 @@ const ContactForm = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    subject: '',
     message: '',
   });
   
@@ -27,25 +26,33 @@ const ContactForm = () => {
     setIsSubmitting(true);
     
     try {
-      // Here we would typically send the form data to a real API or Google Sheets
-      // For demo purposes, we'll simulate a successful submission
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      setSubmitSuccess(true);
-      setFormData({
-        name: '',
-        email: '',
-        subject: '',
-        message: '',
+      // Send form data to the specified email using Email.js or a similar service
+      // For demonstration, we're using a Formspree endpoint which will forward the data to the email
+      const response = await fetch('https://formspree.io/f/rushiwankhede0503@gmail.com', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
       });
       
-      // Reset success message after 5 seconds
-      setTimeout(() => {
-        setSubmitSuccess(false);
-      }, 5000);
-      
+      if (response.ok) {
+        setSubmitSuccess(true);
+        setFormData({
+          name: '',
+          email: '',
+          message: '',
+        });
+        
+        // Reset success message after 5 seconds
+        setTimeout(() => {
+          setSubmitSuccess(false);
+        }, 5000);
+      } else {
+        throw new Error('Something went wrong with the form submission');
+      }
     } catch (error) {
-      setSubmitError('Something went wrong. Please try again.');
+      setSubmitError('Something went wrong. Please try again or email us directly.');
       
       // Reset error message after 5 seconds
       setTimeout(() => {
