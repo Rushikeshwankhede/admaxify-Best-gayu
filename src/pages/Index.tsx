@@ -75,7 +75,7 @@ const Index = () => {
       {/* Stats Section */}
       <section className="py-16 bg-agency-lightGray">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 text-center">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-8 text-center">
             <div className="space-y-2">
               <StatsCounter value={97} suffix="%" />
               <p className="text-gray-600 font-medium">Client Satisfaction</p>
@@ -91,6 +91,10 @@ const Index = () => {
             <div className="space-y-2">
               <StatsCounter value={50} suffix="+" />
               <p className="text-gray-600 font-medium">AI Models Utilized</p>
+            </div>
+            <div className="space-y-2">
+              <StatsCounter value={600} suffix="+" />
+              <p className="text-gray-600 font-medium">Satisfied Clients</p>
             </div>
           </div>
         </div>
