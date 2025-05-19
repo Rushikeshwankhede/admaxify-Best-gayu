@@ -119,6 +119,7 @@ const Services = () => {
           key={service.id} 
           id={`service-detail-${service.id}`}
           className={`py-16 ${service.id % 2 === 0 ? 'bg-agency-lightGray' : 'bg-white'}`}
+          ref={el => serviceRefs.current[`service-detail-${service.id}`] = el}
         >
           <div className="container mx-auto px-4">
             <div className="flex flex-col md:flex-row items-start">
@@ -149,9 +150,14 @@ const Services = () => {
                   ))}
                 </ul>
                 
-                <Link to="/contact" className="agency-btn inline-block">
+                <a
+                  href="https://script.google.com/macros/s/AKfycbyBvSWS_w8ZO_1BCvom6Vy86X1zUwJ2kY3OHG9awwD34mTgF_36Ef818xulxehGCFq8/exec"
+                  className="agency-btn"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   Get Started
-                </Link>
+                </a>
               </div>
               
               <div className="md:w-1/2">
@@ -197,9 +203,14 @@ const Services = () => {
                     <div>
                       <h3 className="text-2xl font-bold mb-4">Ready to get started?</h3>
                       <p className="mb-6">Our experts are ready to help you implement this service for your business. Contact us today for a free consultation.</p>
-                      <Link to="/contact" className="agency-btn inline-block">
+                      <a
+                        href="https://script.google.com/macros/s/AKfycbyBvSWS_w8ZO_1BCvom6Vy86X1zUwJ2kY3OHG9awwD34mTgF_36Ef818xulxehGCFq8/exec"
+                        className="agency-btn inline-block"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
                         Book a Consultation
-                      </Link>
+                      </a>
                     </div>
                   )}
                 </div>
@@ -215,9 +226,14 @@ const Services = () => {
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to Transform Your Digital Marketing?</h2>
             <p className="text-xl mb-8">Get in touch with our team to discuss how we can help you achieve your business goals with our AI-powered marketing solutions.</p>
-            <Link to="/contact" className="agency-btn text-lg px-8 py-4">
+            <a
+              href="https://script.google.com/macros/s/AKfycbyBvSWS_w8ZO_1BCvom6Vy86X1zUwJ2kY3OHG9awwD34mTgF_36Ef818xulxehGCFq8/exec"
+              className="agency-btn text-lg px-8 py-4"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               Book Free Strategy Call
-            </Link>
+            </a>
           </div>
         </div>
       </section>

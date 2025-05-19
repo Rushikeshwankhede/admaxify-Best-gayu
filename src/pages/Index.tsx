@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronRight, Sparkles, Users, Target, BrainCircuit, ArrowRight, ChevronLeft, ChevronDown, Mail, Phone, MapPin } from 'lucide-react';
@@ -16,21 +17,26 @@ const Index = () => {
   const [isVisible, setIsVisible] = useState(false);
   const featuredServices = services.slice(0, 3);
   const featuredTestimonials = testimonials.slice(0, 3);
+  
   useEffect(() => {
     setIsVisible(true);
   }, []);
+  
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentTestimonial(prev => (prev + 1) % featuredTestimonials.length);
     }, 8000);
     return () => clearInterval(interval);
   }, [featuredTestimonials.length]);
+  
   const nextTestimonial = () => {
     setCurrentTestimonial(prev => (prev + 1) % featuredTestimonials.length);
   };
+  
   const prevTestimonial = () => {
     setCurrentTestimonial(prev => (prev - 1 + featuredTestimonials.length) % featuredTestimonials.length);
   };
+  
   return <div className="min-h-screen">
       <Navbar />
       
@@ -46,29 +52,14 @@ const Index = () => {
                 We combine creative excellence with artificial intelligence to deliver marketing strategies that drive real business results.
               </p>
               <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 opacity-0 animate-fade-in-delay-2">
-
-
-
-{/* ======================================================================================================================= */}
-                
-{/*                 <Link to="/contact" className="agency-btn">
+                <a
+                  href="https://script.google.com/macros/s/AKfycbyBvSWS_w8ZO_1BCvom6Vy86X1zUwJ2kY3OHG9awwD34mTgF_36Ef818xulxehGCFq8/exec"
+                  className="agency-btn"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   Book Free Strategy Call
-                </Link> */}
-
-
-<a
-  href="https://script.google.com/macros/s/AKfycbyBvSWS_w8ZO_1BCvom6Vy86X1zUwJ2kY3OHG9awwD34mTgF_36Ef818xulxehGCFq8/exec"
-  className="agency-btn"
-  target="_blank"
-  rel="noopener noreferrer"
->
-  Book Free Strategy Call
-</a>
-
-
-
-                
-{/* ======================================================================================================================= */}
+                </a>
                 <Link to="/services" className="agency-btn-outline bg-white bg-opacity-10">
                   Explore Our Services
                 </Link>
@@ -226,10 +217,10 @@ const Index = () => {
             <div className="mb-8">
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-xl font-bold">Average Client Growth</h3>
-                <div className="flex space-x-2">
+                <div className="flex space-x-4">
                   <span className="flex items-center">
                     <span className="w-3 h-3 bg-agency-purple rounded-full inline-block mr-2"></span>
-                    With AdMaxify
+                    Our Clients' Growth
                   </span>
                   <span className="flex items-center">
                     <span className="w-3 h-3 bg-gray-300 rounded-full inline-block mr-2"></span>
@@ -238,18 +229,16 @@ const Index = () => {
                 </div>
               </div>
               
-              {/* Graph Visualization - Fixed version */}
+              {/* Updated Graph Visualization based on provided image */}
               <div className="h-80 w-full relative">
                 <div className="absolute bottom-0 left-0 w-full h-full flex">
                   {/* Y-axis */}
                   <div className="w-12 h-full flex flex-col justify-between text-sm text-gray-500 pr-2">
-                    <span>300%</span>
-                    <span>250%</span>
-                    <span>200%</span>
-                    <span>150%</span>
-                    <span>100%</span>
-                    <span>50%</span>
-                    <span>0%</span>
+                    <span>600</span>
+                    <span>450</span>
+                    <span>300</span>
+                    <span>150</span>
+                    <span>0</span>
                   </div>
                   
                   {/* Graph Content */}
@@ -261,35 +250,76 @@ const Index = () => {
                       <div className="border-b border-gray-200 h-0"></div>
                       <div className="border-b border-gray-200 h-0"></div>
                       <div className="border-b border-gray-200 h-0"></div>
-                      <div className="border-b border-gray-200 h-0"></div>
-                      <div className="border-b border-gray-200 h-0"></div>
                     </div>
                     
-                    {/* Graph Lines - Fixed to stay within bounds */}
+                    {/* Graph Lines - Contained within viewport */}
                     <div className="absolute inset-0">
-                      {/* Industry Average Line */}
-                      <svg className="w-full h-full" viewBox="0 0 480 280" preserveAspectRatio="none">
-                        <path d="M0,252 L80,240 L160,228 L240,216 L320,210 L400,204 L480,198" fill="none" stroke="#D1D5DB" strokeWidth="3" />
+                      {/* Industry Average Line (dashed) */}
+                      <svg className="w-full h-full" viewBox="0 0 1000 300" preserveAspectRatio="none">
+                        <path 
+                          d="M0,290 L83,280 L166,275 L250,265 L333,260 L417,250 L500,245 L583,240 L667,235 L750,230 L833,225 L917,220" 
+                          fill="none" 
+                          stroke="#D1D5DB" 
+                          strokeWidth="3" 
+                          strokeDasharray="5,5"
+                        />
                       </svg>
                       
-                      {/* AdMaxify Performance Line */}
-                      <svg className="w-full h-full" viewBox="0 0 480 280" preserveAspectRatio="none">
-                        <path d="M0,252 L80,210 L160,168 L240,126 L320,84 L400,63 L480,42" fill="none" stroke="#9b87f5" strokeWidth="3" />
-                        {/* Animated dot */}
-                        <circle cx="480" cy="42" r="6" fill="#9b87f5" className="animate-pulse" />
+                      {/* Our Clients' Growth Line (solid) with dots */}
+                      <svg className="w-full h-full" viewBox="0 0 1000 300" preserveAspectRatio="none">
+                        <path 
+                          d="M0,270 L83,250 L166,220 L250,210 L333,170 L417,160 L500,140 L583,100 L667,70 L750,50 L833,30 L917,10" 
+                          fill="none" 
+                          stroke="#9b87f5" 
+                          strokeWidth="3" 
+                        />
+                        
+                        {/* Dots along the line */}
+                        <circle cx="0" cy="270" r="5" fill="#9b87f5" />
+                        <circle cx="83" cy="250" r="5" fill="#9b87f5" />
+                        <circle cx="166" cy="220" r="5" fill="#9b87f5" />
+                        <circle cx="250" cy="210" r="5" fill="#9b87f5" />
+                        <circle cx="333" cy="170" r="5" fill="#9b87f5" />
+                        <circle cx="417" cy="160" r="5" fill="#9b87f5" />
+                        <circle cx="500" cy="140" r="5" fill="#9b87f5" />
+                        <circle cx="583" cy="100" r="5" fill="#9b87f5" />
+                        <circle cx="667" cy="70" r="5" fill="#9b87f5" />
+                        <circle cx="750" cy="50" r="5" fill="#9b87f5" />
+                        <circle cx="833" cy="30" r="5" fill="#9b87f5" />
+                        <circle cx="917" cy="10" r="5" fill="#9b87f5" className="animate-pulse" />
                       </svg>
                     </div>
                     
                     {/* X-axis labels */}
                     <div className="absolute bottom-0 left-0 w-full flex justify-between text-sm text-gray-500 transform translate-y-6">
-                      <span>Month 1</span>
-                      <span>Month 2</span>
-                      <span>Month 3</span>
-                      <span>Month 4</span>
-                      <span>Month 5</span>
-                      <span>Month 6</span>
+                      <span>Jan</span>
+                      <span>Feb</span>
+                      <span>Mar</span>
+                      <span>Apr</span>
+                      <span>May</span>
+                      <span>Jun</span>
+                      <span>Jul</span>
+                      <span>Aug</span>
+                      <span>Sep</span>
+                      <span>Oct</span>
+                      <span>Nov</span>
+                      <span>Dec</span>
                     </div>
                   </div>
+                </div>
+              </div>
+              
+              {/* Graph Legend - Bottom */}
+              <div className="mt-10 text-center">
+                <div className="flex items-center justify-center gap-6">
+                  <span className="flex items-center">
+                    <span className="w-3 h-3 bg-agency-purple rounded-full inline-block mr-2"></span>
+                    Our Clients' Growth
+                  </span>
+                  <span className="flex items-center">
+                    <span className="w-3 h-3 bg-gray-300 rounded-full inline-block mr-2"></span>
+                    Industry Average
+                  </span>
                 </div>
               </div>
             </div>
@@ -344,30 +374,15 @@ const Index = () => {
               <h2 className="text-3xl md:text-4xl font-bold mb-4">Ready to Transform Your Digital Marketing?</h2>
               <p className="text-xl">Book a free strategy call with our team to discover how AdMaxify can help grow your business.</p>
             </div>
-
-
-{/*=================================================================================================================================== */}
-
-
             
-{/*             <Link to="/contact" className="agency-btn text-lg px-8 py-4 whitespace-nowrap">
+            <a
+              href="https://script.google.com/macros/s/AKfycbyBvSWS_w8ZO_1BCvom6Vy86X1zUwJ2kY3OHG9awwD34mTgF_36Ef818xulxehGCFq8/exec"
+              className="agency-btn text-lg px-8 py-4 whitespace-nowrap"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               Book Free Strategy Call
-            </Link> */}
-
-
-
-<a
-  href="https://script.google.com/macros/s/AKfycbyBvSWS_w8ZO_1BCvom6Vy86X1zUwJ2kY3OHG9awwD34mTgF_36Ef818xulxehGCFq8/exec"
-  className="agency-btn text-lg px-8 py-4 whitespace-nowrap"
-  target="_blank"
-  rel="noopener noreferrer"
->
-  Book Free Strategy Call
-</a>
-
-
-            
-{/*=================================================================================================================================== */}
+            </a>
           </div>
         </div>
       </section>

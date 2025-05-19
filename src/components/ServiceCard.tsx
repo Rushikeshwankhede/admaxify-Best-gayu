@@ -15,6 +15,17 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
   icon,
   link = "/services"
 }) => {
+  const handleClick = (e: React.MouseEvent) => {
+    // If this is a hash link, handle the smooth scrolling
+    if (link.startsWith('#')) {
+      e.preventDefault();
+      const targetElement = document.querySelector(link);
+      if (targetElement) {
+        targetElement.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  };
+
   return (
     <div className="agency-card h-full flex flex-col transition-transform hover:-translate-y-1 duration-300">
       <div className="bg-agency-softPurple p-4 inline-block rounded-lg mb-6">
@@ -27,6 +38,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
       
       <Link 
         to={link} 
+        onClick={handleClick}
         className="text-agency-purple font-medium hover:underline mt-auto inline-block"
       >
         Learn more &rarr;

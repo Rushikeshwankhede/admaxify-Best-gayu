@@ -26,14 +26,19 @@ const ContactForm = () => {
     setIsSubmitting(true);
     
     try {
-      // Send form data to the specified email using Email.js or a similar service
-      // For demonstration, we're using a Formspree endpoint which will forward the data to the email
-      const response = await fetch('https://formspree.io/f/rushiwankhede0503@gmail.com', {
+      // Using FormSubmit service to send emails - it's a simple service that forwards form submissions via email
+      const response = await fetch('https://formsubmit.co/rushiwankhede0503@gmail.com', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Accept': 'application/json'
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          message: formData.message,
+          _subject: 'New Contact Form Submission - AdMaxify',
+        }),
       });
       
       if (response.ok) {
