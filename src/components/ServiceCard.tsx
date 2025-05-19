@@ -7,22 +7,29 @@ interface ServiceCardProps {
   description: string;
   icon: React.ReactNode;
   link?: string;
+  serviceId?: number;
 }
 
 const ServiceCard: React.FC<ServiceCardProps> = ({
   title,
   description,
   icon,
-  link = "/services"
+  link = "/services",
+  serviceId
 }) => {
   const handleClick = (e: React.MouseEvent) => {
-    // If this is a hash link, handle the smooth scrolling
+    // If this is a hash link or a service detail link, handle the smooth scrolling
     if (link.startsWith('#')) {
       e.preventDefault();
       const targetElement = document.querySelector(link);
       if (targetElement) {
         targetElement.scrollIntoView({ behavior: 'smooth' });
       }
+    } else if (serviceId) {
+      // If we have a serviceId, we're going to the services page detail
+      e.preventDefault();
+      // Navigate to the services page
+      window.location.href = `/services#service-detail-${serviceId}`;
     }
   };
 
