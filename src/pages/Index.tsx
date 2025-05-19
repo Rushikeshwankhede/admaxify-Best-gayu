@@ -46,29 +46,9 @@ const Index = () => {
                 We combine creative excellence with artificial intelligence to deliver marketing strategies that drive real business results.
               </p>
               <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 opacity-0 animate-fade-in-delay-2">
-
-
-
-{/* ======================================================================================================================= */}
-                
-{/*                 <Link to="/contact" className="agency-btn">
+                <Link to="/contact" className="agency-btn">
                   Book Free Strategy Call
-                </Link> */}
-
-
-<a
-  href="https://script.google.com/macros/s/AKfycbyBvSWS_w8ZO_1BCvom6Vy86X1zUwJ2kY3OHG9awwD34mTgF_36Ef818xulxehGCFq8/exec"
-  className="agency-btn"
-  target="_blank"
-  rel="noopener noreferrer"
->
-  Book Free Strategy Call
-</a>
-
-
-
-                
-{/* ======================================================================================================================= */}
+                </Link>
                 <Link to="/services" className="agency-btn-outline bg-white bg-opacity-10">
                   Explore Our Services
                 </Link>
@@ -344,30 +324,9 @@ const Index = () => {
               <h2 className="text-3xl md:text-4xl font-bold mb-4">Ready to Transform Your Digital Marketing?</h2>
               <p className="text-xl">Book a free strategy call with our team to discover how AdMaxify can help grow your business.</p>
             </div>
-
-
-{/*=================================================================================================================================== */}
-
-
-            
-{/*             <Link to="/contact" className="agency-btn text-lg px-8 py-4 whitespace-nowrap">
+            <Link to="/contact" className="agency-btn text-lg px-8 py-4 whitespace-nowrap">
               Book Free Strategy Call
-            </Link> */}
-
-
-
-<a
-  href="https://script.google.com/macros/s/AKfycbyBvSWS_w8ZO_1BCvom6Vy86X1zUwJ2kY3OHG9awwD34mTgF_36Ef818xulxehGCFq8/exec"
-  className="agency-btn text-lg px-8 py-4 whitespace-nowrap"
-  target="_blank"
-  rel="noopener noreferrer"
->
-  Book Free Strategy Call
-</a>
-
-
-            
-{/*=================================================================================================================================== */}
+            </Link>
           </div>
         </div>
       </section>
