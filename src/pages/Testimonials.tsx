@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Search, Filter, ArrowUpRight } from 'lucide-react';
+import { Helmet } from 'react-helmet';
 
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -64,6 +65,11 @@ const Testimonials = () => {
 
   return (
     <div className="min-h-screen">
+      <Helmet>
+        <title>Client Success Stories - AIAdmaxify</title>
+        <meta name="description" content="Discover how AIAdmaxify has helped businesses achieve remarkable results with AI-powered marketing strategies." />
+      </Helmet>
+      
       <Navbar />
       
       {/* Hero Section */}
@@ -72,7 +78,7 @@ const Testimonials = () => {
           <div className="max-w-3xl mx-auto text-center">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">Client Success Stories</h1>
             <p className="text-xl mb-8">
-              Discover how AdMaxify has helped businesses like yours achieve remarkable results with AI-powered marketing strategies.
+              Discover how AIAdmaxify has helped businesses like yours achieve remarkable results with AI-powered marketing strategies.
             </p>
           </div>
         </div>
@@ -208,16 +214,16 @@ const Testimonials = () => {
               </div>
               
               <blockquote className="italic text-gray-200 mb-6 border-l-4 border-agency-purple pl-4">
-                "AdMaxify completely transformed our digital marketing approach. Their AI-driven strategies helped us reach our target audience with unprecedented accuracy. Our online sales increased by 187% within just three months of working with them. They're not just service providers; they're true partners in our growth journey."
+                "AIAdmaxify completely transformed our digital marketing approach. Their AI-driven strategies helped us reach our target audience with unprecedented accuracy. Our online sales increased by 187% within just three months of working with them. They're not just service providers; they're true partners in our growth journey."
               </blockquote>
               
               <div className="space-y-4 mb-8">
                 <div className="flex justify-between">
-                  <span>Before AdMaxify:</span>
+                  <span>Before AIAdmaxify:</span>
                   <span>$12,000 monthly revenue</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>After AdMaxify:</span>
+                  <span>After AIAdmaxify:</span>
                   <span>$34,500 monthly revenue</span>
                 </div>
                 <div className="flex justify-between">
@@ -288,9 +294,14 @@ const Testimonials = () => {
                   Join our satisfied clients and transform your marketing with AI-powered solutions.
                 </p>
               </div>
-              <Link to="/contact" className="agency-btn whitespace-nowrap">
+              <a 
+                href="/book-strategy-call" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="agency-btn whitespace-nowrap"
+              >
                 Book Free Strategy Call
-              </Link>
+              </a>
             </div>
           </div>
         </div>

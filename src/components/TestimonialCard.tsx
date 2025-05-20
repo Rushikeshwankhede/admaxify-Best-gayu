@@ -74,6 +74,17 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({
           <ChevronRight size={16} className="ml-1" />
         </Link>
       </div>
+      
+      <div className="mt-4 pt-4 border-t border-gray-200">
+        <a 
+          href="/book-strategy-call" 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          className="agency-btn w-full flex justify-center items-center"
+        >
+          Get Similar Results
+        </a>
+      </div>
     </div>
   );
 };

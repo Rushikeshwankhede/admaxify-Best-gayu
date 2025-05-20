@@ -2,6 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Mail, Phone, MapPin, Clock, ArrowRight } from 'lucide-react';
+import { Helmet } from 'react-helmet';
 
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -10,6 +11,11 @@ import ContactForm from '../components/ContactForm';
 const Contact = () => {
   return (
     <div className="min-h-screen">
+      <Helmet>
+        <title>Contact Us - AIAdmaxify</title>
+        <meta name="description" content="Get in touch with AIAdmaxify's team to discuss how our AI-powered marketing solutions can help your business grow." />
+      </Helmet>
+      
       <Navbar />
       
       {/* Hero Section */}
@@ -41,7 +47,7 @@ const Contact = () => {
                   </div>
                   <div>
                     <h4 className="font-bold text-lg">Email</h4>
-                    <a href="mailto:hello@admaxify.com" className="text-gray-600 hover:text-agency-purple">hello@admaxify.com</a>
+                    <a href="mailto:hello@aiadmaxify.com" className="text-gray-600 hover:text-agency-purple">hello@aiadmaxify.com</a>
                   </div>
                 </div>
                 
@@ -88,7 +94,7 @@ const Contact = () => {
               <div className="bg-white rounded-lg shadow-lg p-6 md:p-8">
                 <h2 className="text-3xl font-bold mb-6">Book Your Free Strategy Call</h2>
                 <p className="mb-8 text-lg text-gray-600">
-                  Schedule a no-obligation strategy call with our marketing experts to discuss your business goals and how AdMaxify can help you achieve them.
+                  Schedule a no-obligation strategy call with our marketing experts to discuss your business goals and how AIAdmaxify can help you achieve them.
                 </p>
                 
                 <ContactForm />
@@ -120,7 +126,7 @@ const Contact = () => {
               </div>
               
               <div className="bg-white rounded-lg shadow-md p-6">
-                <h3 className="text-xl font-bold mb-3">How is AdMaxify different from other marketing agencies?</h3>
+                <h3 className="text-xl font-bold mb-3">How is AIAdmaxify different from other marketing agencies?</h3>
                 <p className="text-gray-600">
                   Our key differentiator is our AI-first approach. While many agencies claim to use AI, it's at the core of everything we do. Our proprietary AI systems analyze data, predict trends, and optimize campaigns in ways that traditional agencies simply cannot match. Plus, we provide unparalleled transparency through our real-time reporting dashboards.
                 </p>
@@ -134,7 +140,7 @@ const Contact = () => {
               </div>
               
               <div className="bg-white rounded-lg shadow-md p-6">
-                <h3 className="text-xl font-bold mb-3">How much does it cost to work with AdMaxify?</h3>
+                <h3 className="text-xl font-bold mb-3">How much does it cost to work with AIAdmaxify?</h3>
                 <p className="text-gray-600">
                   We offer customized packages based on your specific needs and goals. Our services typically start at $3,500 per month, with pricing varying based on the scope of services, competitive landscape, and resources required. We're happy to provide a detailed quote during your free strategy call.
                 </p>
@@ -155,10 +161,15 @@ const Contact = () => {
                   Explore our resources to learn more about our approach to digital marketing.
                 </p>
               </div>
-              <Link to="/services" className="agency-btn whitespace-nowrap inline-flex items-center">
+              <a 
+                href="/services" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="agency-btn whitespace-nowrap inline-flex items-center"
+              >
                 Explore Our Services
                 <ArrowRight size={18} className="ml-2" />
-              </Link>
+              </a>
             </div>
           </div>
         </div>

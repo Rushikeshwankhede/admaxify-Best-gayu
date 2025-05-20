@@ -58,10 +58,10 @@ const Services = () => {
   return (
     <>
       <Helmet>
-        <title>AdMaxify - Our Services</title>
-        <meta name="description" content="Explore AdMaxify's comprehensive suite of AI-powered digital marketing services designed to elevate your brand and drive measurable results." />
-        <meta property="og:title" content="AdMaxify - Our Services" />
-        <meta property="og:description" content="Explore AdMaxify's comprehensive suite of AI-powered digital marketing services designed to elevate your brand and drive measurable results." />
+        <title>AIAdmaxify - Our Services</title>
+        <meta name="description" content="Explore AIAdmaxify's comprehensive suite of AI-powered digital marketing services designed to elevate your brand and drive measurable results." />
+        <meta property="og:title" content="AIAdmaxify - Our Services" />
+        <meta property="og:description" content="Explore AIAdmaxify's comprehensive suite of AI-powered digital marketing services designed to elevate your brand and drive measurable results." />
         <meta property="og:image" content="URL_TO_YOUR_SERVICES_PAGE_IMAGE" />
         <meta property="og:url" content="URL_TO_YOUR_SERVICES_PAGE" />
         <meta name="twitter:card" content="summary_large_image" />
@@ -75,39 +75,45 @@ const Services = () => {
         </div>
       </section>
       
-      {/* Services Overview Section */}
+      {/* Services Overview Section - Now with Cards */}
       <section className="py-16">
         <div className="container mx-auto px-4">
-          {services.map(service => (
-            <div key={service.id} id={`service-${service.id}`} className="md:flex md:items-center space-y-4 md:space-y-0 md:space-x-6 mb-12 last:mb-0">
-              <div className="bg-agency-softPurple p-4 rounded-lg md:w-32 md:h-32 flex items-center justify-center">
-                {getServiceIcon(service.icon)}
-              </div>
-              
-              <div>
-                <h2 className="text-2xl font-bold mb-2">{service.title}</h2>
-                <p className="text-gray-700 mb-4">{service.shortDescription}</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {services.map(service => (
+              <div key={service.id} id={`service-${service.id}`} className="agency-card h-full flex flex-col transition-transform hover:-translate-y-2 duration-300">
+                <div className="bg-agency-softPurple p-6 rounded-lg inline-block mb-6">
+                  {getServiceIcon(service.icon)}
+                </div>
+                
+                <h2 className="text-2xl font-bold mb-3">{service.title}</h2>
+                <p className="text-gray-700 mb-4 flex-grow">{service.shortDescription}</p>
                 
                 {service.features && service.features.length > 0 && (
                   <>
-                    <h3 className="font-bold mb-2">Key Features:</h3>
-                    <ul className="list-disc list-inside text-gray-600">
-                      {service.features.map((feature, index) => (
-                        <li key={index}>{feature}</li>
+                    <h3 className="font-bold mb-2 text-agency-navy">Key Features:</h3>
+                    <ul className="list-disc list-inside text-gray-600 mb-4 pl-2">
+                      {service.features.slice(0, 3).map((feature, index) => (
+                        <li key={index} className="mb-1">{feature}</li>
                       ))}
+                      {service.features.length > 3 && (
+                        <li className="text-agency-purple">+ {service.features.length - 3} more features</li>
+                      )}
                     </ul>
                   </>
                 )}
                 
                 <button 
                   onClick={() => handleScrollToService(service.id.toString())} 
-                  className="mt-4 text-agency-purple font-medium hover:underline"
+                  className="mt-auto text-white bg-agency-purple hover:bg-agency-navy transition-colors duration-300 px-5 py-2 rounded-md inline-flex items-center"
                 >
                   Learn More
+                  <svg xmlns="http://www.w3.org/2000/svg" className="ml-2 h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
+                  </svg>
                 </button>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </section>
       
@@ -206,10 +212,12 @@ const Services = () => {
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to Elevate Your Digital Marketing?</h2>
           <p className="text-xl mb-8 max-w-3xl mx-auto">
-            Partner with AdMaxify and leverage AI-powered marketing solutions to achieve outstanding results for your business.
+            Partner with AIAdmaxify and leverage AI-powered marketing solutions to achieve outstanding results for your business.
           </p>
           <a 
-            href="/contact" 
+            href="/book-strategy-call" 
+            target="_blank"
+            rel="noopener noreferrer"
             className="agency-btn inline-block"
           >
             Book Free Strategy Call

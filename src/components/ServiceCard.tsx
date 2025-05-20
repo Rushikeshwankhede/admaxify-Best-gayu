@@ -28,8 +28,8 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
     } else if (serviceId) {
       // If we have a serviceId, we're going to the services page detail
       e.preventDefault();
-      // Navigate to the services page
-      window.location.href = `/services#service-detail-${serviceId}`;
+      // Navigate to the services page with the service detail anchor
+      window.open(`/services#service-detail-${serviceId}`, '_blank');
     }
   };
 
@@ -43,13 +43,26 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
       
       <p className="text-gray-600 mb-6 flex-1">{description}</p>
       
-      <Link 
-        to={link} 
-        onClick={handleClick}
-        className="text-agency-purple font-medium hover:underline mt-auto inline-block"
-      >
-        Learn more &rarr;
-      </Link>
+      {link.includes('book-strategy-call') ? (
+        <a 
+          href={link} 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="text-agency-purple font-medium hover:underline mt-auto inline-block"
+        >
+          Learn more &rarr;
+        </a>
+      ) : (
+        <Link 
+          to={link} 
+          onClick={handleClick}
+          className="text-agency-purple font-medium hover:underline mt-auto inline-block"
+          target={link.startsWith('/') && !serviceId ? "_blank" : undefined}
+          rel={link.startsWith('/') && !serviceId ? "noopener noreferrer" : undefined}
+        >
+          Learn more &rarr;
+        </Link>
+      )}
     </div>
   );
 };

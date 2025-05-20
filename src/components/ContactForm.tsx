@@ -37,7 +37,7 @@ const ContactForm = () => {
           name: formData.name,
           email: formData.email,
           message: formData.message,
-          _subject: 'New Contact Form Submission - AdMaxify',
+          _subject: 'New Contact Form Submission - AIAdmaxify',
         }),
       });
       
@@ -144,6 +144,18 @@ const ContactForm = () => {
             </>
           )}
         </button>
+        
+        <div className="text-center mt-6">
+          <p className="text-gray-600">Need immediate assistance?</p>
+          <a 
+            href="/book-strategy-call" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="agency-btn mt-3 inline-block"
+          >
+            Book a Free Strategy Call
+          </a>
+        </div>
       </form>
     </div>
   );
