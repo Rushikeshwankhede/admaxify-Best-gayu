@@ -1,13 +1,88 @@
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrainCircuit, Search, BarChart, Mail, Gauge, Palette, LineChart, FileText, Video, Users, MapPin, Cog } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import { services } from '../data/services';
 import { Helmet } from 'react-helmet';
-import { allTestimonials } from '../data/testimonials';
+import { supabase } from '@/integrations/supabase/client';
+import { useQuery } from '@tanstack/react-query';
+
+interface Service {
+  id: string;
+  title: string;
+  short_description: string;
+  full_description: string;
+  icon: string;
+  benefits: string[];
+  features: string[];
+  case_study_id: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+interface Testimonial {
+  id: string;
+  name: string;
+  company: string;
+  position: string;
+  image: string;
+  testimonial: string;
+  results: {
+    before: string;
+    after: string;
+  };
+}
 
 const Services = () => {
+  const [testimonialMap, setTestimonialMap] = useState<Record<string, Testimonial>>({});
+
+  const { data: services = [], isLoading } = useQuery({
+    queryKey: ['services'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('services')
+        .select('*')
+        .order('created_at', { ascending: true });
+      
+      if (error) {
+        console.error('Error fetching services:', error);
+        return [];
+      }
+      
+      return data as Service[];
+    }
+  });
+
+  // Fetch testimonials for case studies
+  useEffect(() => {
+    const caseStudyIds = services
+      .filter(service => service.case_study_id)
+      .map(service => service.case_study_id);
+      
+    if (caseStudyIds.length > 0) {
+      const fetchTestimonials = async () => {
+        const { data, error } = await supabase
+          .from('testimonials')
+          .select('*')
+          .in('id', caseStudyIds);
+          
+        if (error) {
+          console.error('Error fetching testimonials:', error);
+          return;
+        }
+        
+        const testimonialData = data.reduce((acc, testimonial) => {
+          acc[testimonial.id] = testimonial;
+          return acc;
+        }, {} as Record<string, Testimonial>);
+        
+        setTestimonialMap(testimonialData);
+      };
+      
+      fetchTestimonials();
+    }
+  }, [services]);
+
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
@@ -78,42 +153,48 @@ const Services = () => {
       {/* Services Overview Section - Now with Cards */}
       <section className="py-16">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {services.map(service => (
-              <div key={service.id} id={`service-${service.id}`} className="agency-card h-full flex flex-col transition-transform hover:-translate-y-2 duration-300">
-                <div className="bg-agency-softPurple p-6 rounded-lg inline-block mb-6">
-                  {getServiceIcon(service.icon)}
+          {isLoading ? (
+            <div className="flex justify-center items-center py-20">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-agency-purple"></div>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {services.map(service => (
+                <div key={service.id} id={`service-${service.id}`} className="agency-card h-full flex flex-col transition-transform hover:-translate-y-2 duration-300">
+                  <div className="bg-agency-softPurple p-6 rounded-lg inline-block mb-6">
+                    {getServiceIcon(service.icon)}
+                  </div>
+                  
+                  <h2 className="text-2xl font-bold mb-3">{service.title}</h2>
+                  <p className="text-gray-700 mb-4 flex-grow">{service.short_description}</p>
+                  
+                  {service.features && service.features.length > 0 && (
+                    <>
+                      <h3 className="font-bold mb-2 text-agency-navy">Key Features:</h3>
+                      <ul className="list-disc list-inside text-gray-600 mb-4 pl-2">
+                        {service.features.slice(0, 3).map((feature, index) => (
+                          <li key={index} className="mb-1">{feature}</li>
+                        ))}
+                        {service.features.length > 3 && (
+                          <li className="text-agency-purple">+ {service.features.length - 3} more features</li>
+                        )}
+                      </ul>
+                    </>
+                  )}
+                  
+                  <button 
+                    onClick={() => handleScrollToService(service.id)} 
+                    className="mt-auto text-white bg-agency-purple hover:bg-agency-navy transition-colors duration-300 px-5 py-2 rounded-md inline-flex items-center"
+                  >
+                    Learn More
+                    <svg xmlns="http://www.w3.org/2000/svg" className="ml-2 h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
+                    </svg>
+                  </button>
                 </div>
-                
-                <h2 className="text-2xl font-bold mb-3">{service.title}</h2>
-                <p className="text-gray-700 mb-4 flex-grow">{service.shortDescription}</p>
-                
-                {service.features && service.features.length > 0 && (
-                  <>
-                    <h3 className="font-bold mb-2 text-agency-navy">Key Features:</h3>
-                    <ul className="list-disc list-inside text-gray-600 mb-4 pl-2">
-                      {service.features.slice(0, 3).map((feature, index) => (
-                        <li key={index} className="mb-1">{feature}</li>
-                      ))}
-                      {service.features.length > 3 && (
-                        <li className="text-agency-purple">+ {service.features.length - 3} more features</li>
-                      )}
-                    </ul>
-                  </>
-                )}
-                
-                <button 
-                  onClick={() => handleScrollToService(service.id.toString())} 
-                  className="mt-auto text-white bg-agency-purple hover:bg-agency-navy transition-colors duration-300 px-5 py-2 rounded-md inline-flex items-center"
-                >
-                  Learn More
-                  <svg xmlns="http://www.w3.org/2000/svg" className="ml-2 h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
-                  </svg>
-                </button>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
       
@@ -124,8 +205,8 @@ const Services = () => {
           
           {services.map(service => {
             // Find a related testimonial for this service if available
-            const relatedTestimonial = service.caseStudyId 
-              ? allTestimonials.find(t => t.id === service.caseStudyId) 
+            const relatedTestimonial = service.case_study_id 
+              ? testimonialMap[service.case_study_id]
               : null;
               
             return (
@@ -135,13 +216,13 @@ const Services = () => {
                 className="bg-white rounded-lg shadow-lg p-8 mb-12 last:mb-0"
               >
                 <h3 className="text-2xl font-bold mb-4 text-agency-navy">{service.title}</h3>
-                <p className="text-gray-700 mb-6">{service.fullDescription}</p>
+                <p className="text-gray-700 mb-6">{service.full_description}</p>
                 
                 <div className="grid md:grid-cols-2 gap-8 mb-8">
                   <div>
                     <h4 className="text-xl font-semibold mb-4">Key Benefits:</h4>
                     <ul className="space-y-2">
-                      {service.benefits.map((benefit, index) => (
+                      {service.benefits?.map((benefit, index) => (
                         <li key={index} className="flex items-start">
                           <div className="bg-agency-softPurple p-1 rounded-full mr-3">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-agency-purple"><path d="M20 6 9 17l-5-5"/></svg>
@@ -155,7 +236,7 @@ const Services = () => {
                   <div>
                     <h4 className="text-xl font-semibold mb-4">What We Deliver:</h4>
                     <ul className="space-y-2">
-                      {service.features.map((feature, index) => (
+                      {service.features?.map((feature, index) => (
                         <li key={index} className="flex items-start">
                           <div className="bg-agency-softPurple p-1 rounded-full mr-3">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-agency-purple"><path d="M20 6 9 17l-5-5"/></svg>

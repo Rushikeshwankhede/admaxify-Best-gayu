@@ -4,6 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "@/contexts/AuthContext";
 
 import Index from "./pages/Index";
 import Services from "./pages/Services";
@@ -14,26 +15,57 @@ import Contact from "./pages/Contact";
 import BookStrategyCall from "./pages/BookStrategyCall";
 import NotFound from "./pages/NotFound";
 
-const queryClient = new QueryClient();
+// Admin pages
+import AdminLogin from "./pages/AdminLogin";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminServices from "./pages/admin/AdminServices";
+import ProtectedRoute from "./components/admin/ProtectedRoute";
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 30000,
+      refetchOnWindowFocus: true,
+    },
+  },
+});
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/services" element={<Services />} />
-          <Route path="/testimonials" element={<Testimonials />} />
-          <Route path="/testimonials/:id" element={<TestimonialDetail />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/book-strategy-call" element={<BookStrategyCall />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
+    <AuthProvider>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Routes>
+            {/* Public routes */}
+            <Route path="/" element={<Index />} />
+            <Route path="/services" element={<Services />} />
+            <Route path="/testimonials" element={<Testimonials />} />
+            <Route path="/testimonials/:id" element={<TestimonialDetail />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/book-strategy-call" element={<BookStrategyCall />} />
+            
+            {/* Admin routes */}
+            <Route path="/admin/login" element={<AdminLogin />} />
+            <Route path="/admin" element={
+              <ProtectedRoute>
+                <AdminDashboard />
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/services" element={
+              <ProtectedRoute requiredRole="editor">
+                <AdminServices />
+              </ProtectedRoute>
+            } />
+            
+            {/* 404 route */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </TooltipProvider>
+    </AuthProvider>
   </QueryClientProvider>
 );
 
