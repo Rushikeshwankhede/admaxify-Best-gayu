@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { BrainCircuit, Search, BarChart, Mail, Gauge, Palette, LineChart, FileText, Video, Users, MapPin, Cog } from 'lucide-react';
 import Navbar from '../components/Navbar';
@@ -142,7 +143,7 @@ const Services = () => {
                   </div>
                   
                   <h2 className="text-2xl font-bold mb-3">{service.title}</h2>
-                  <p className="text-gray-700 mb-4 flex-grow">{service.short_description}</p>
+                  <p className="text-gray-700 mb-4 flex-grow">{service.shortDescription}</p>
                   
                   {service.features && Array.isArray(service.features) && service.features.length > 0 && (
                     <>
