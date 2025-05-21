@@ -51,6 +51,7 @@ const AdminLogin = () => {
     setIsSubmitting(true);
     
     try {
+      console.log(`Attempting to sign in with: ${email}`);
       const { success, message } = await signIn(email, password);
       
       if (success) {
@@ -59,6 +60,7 @@ const AdminLogin = () => {
       } else {
         setLoginAttempts(prev => prev + 1);
         toast.error(message || 'Login failed');
+        console.error('Login failed:', message);
         
         // If multiple failed attempts, suggest using the default credentials
         if (loginAttempts >= 2) {
@@ -66,6 +68,7 @@ const AdminLogin = () => {
         }
       }
     } catch (error: any) {
+      console.error('Login error:', error);
       toast.error(error.message || 'An error occurred during login');
     } finally {
       setIsSubmitting(false);

@@ -29,7 +29,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       // Check if rushi1@gmail.com exists
       const { data: existingRushiAdmin, error: rushiCheckError } = await supabase
         .from('admin_users')
-        .select('id')
+        .select('id, role')
         .eq('email', 'rushi1@gmail.com')
         .single();
 
@@ -37,8 +37,21 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         console.error('Error checking for rushi admin user:', rushiCheckError);
       }
 
+      // If rushi admin exists but not as administrator, update the role
+      if (existingRushiAdmin && existingRushiAdmin.role !== 'administrator') {
+        const { error: updateError } = await supabase
+          .from('admin_users')
+          .update({ role: 'administrator' })
+          .eq('id', existingRushiAdmin.id);
+          
+        if (updateError) {
+          console.error('Error updating rushi admin role:', updateError);
+        } else {
+          console.log('Rushi admin role updated to administrator');
+        }
+      }
       // If rushi admin doesn't exist, create one
-      if (!existingRushiAdmin) {
+      else if (!existingRushiAdmin) {
         const { data: { user: rushiUser }, error: rushiSignUpError } = await supabase.auth.signUp({
           email: 'rushi1@gmail.com',
           password: 'Admin@123',
@@ -60,7 +73,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           if (rushiInsertError) {
             console.error('Error inserting rushi admin user:', rushiInsertError);
           } else {
-            console.log('Rushi admin user created successfully');
+            console.log('Rushi admin user created successfully with administrator role');
           }
         }
       }
@@ -160,6 +173,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
       if (data) {
         setRole(data.role as AppRole);
+        console.log('User role fetched:', data.role);
       }
     } catch (error) {
       console.error('Error in fetchUserRole:', error);
@@ -188,10 +202,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         .single();
 
       if (adminUserError || !adminUserData) {
+        console.error('Admin user check error:', adminUserError);
         await supabase.auth.signOut();
         return { success: false, message: 'You do not have admin access' };
       }
 
+      console.log('Admin user role:', adminUserData.role);
+      
       // Update last login time
       await supabase
         .from('admin_users')
