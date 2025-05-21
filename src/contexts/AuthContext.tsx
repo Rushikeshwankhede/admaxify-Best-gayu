@@ -26,7 +26,46 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   // Initialize admin user if it doesn't exist
   const initializeAdminUser = async () => {
     try {
-      // Check if admin@aiadmaxify.com exists
+      // Check if rushi1@gmail.com exists
+      const { data: existingRushiAdmin, error: rushiCheckError } = await supabase
+        .from('admin_users')
+        .select('id')
+        .eq('email', 'rushi1@gmail.com')
+        .single();
+
+      if (rushiCheckError && rushiCheckError.code !== 'PGRST116') {
+        console.error('Error checking for rushi admin user:', rushiCheckError);
+      }
+
+      // If rushi admin doesn't exist, create one
+      if (!existingRushiAdmin) {
+        const { data: { user: rushiUser }, error: rushiSignUpError } = await supabase.auth.signUp({
+          email: 'rushi1@gmail.com',
+          password: 'Admin@123',
+        });
+
+        if (rushiSignUpError) {
+          console.error('Error creating rushi admin user:', rushiSignUpError);
+        } else if (rushiUser) {
+          // Insert the rushi user into admin_users table with admin role
+          const { error: rushiInsertError } = await supabase
+            .from('admin_users')
+            .insert({
+              id: rushiUser.id,
+              email: 'rushi1@gmail.com',
+              role: 'administrator',
+              password_hash: 'Admin@123' // In a real app, you'd properly hash this
+            });
+
+          if (rushiInsertError) {
+            console.error('Error inserting rushi admin user:', rushiInsertError);
+          } else {
+            console.log('Rushi admin user created successfully');
+          }
+        }
+      }
+
+      // Check if default admin@aiadmaxify.com exists
       const { data: existingAdmins, error: checkError } = await supabase
         .from('admin_users')
         .select('id')
@@ -35,7 +74,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
       if (checkError && checkError.code !== 'PGRST116') {
         console.error('Error checking for admin user:', checkError);
-        return;
       }
 
       // If admin doesn't exist, create one
@@ -47,10 +85,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
         if (signUpError) {
           console.error('Error creating admin user:', signUpError);
-          return;
-        }
-
-        if (user) {
+        } else if (user) {
           // Insert the user into admin_users table with admin role
           const { error: insertError } = await supabase
             .from('admin_users')

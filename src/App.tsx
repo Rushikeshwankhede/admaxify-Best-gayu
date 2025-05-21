@@ -32,6 +32,7 @@ const queryClient = new QueryClient({
     queries: {
       staleTime: 30000,
       refetchOnWindowFocus: true,
+      retry: 1,
     },
   },
 });
@@ -44,16 +45,7 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <Routes>
-            {/* Public routes */}
-            <Route path="/" element={<Index />} />
-            <Route path="/services" element={<Services />} />
-            <Route path="/testimonials" element={<Testimonials />} />
-            <Route path="/testimonials/:id" element={<TestimonialDetail />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/book-strategy-call" element={<BookStrategyCall />} />
-            
-            {/* Admin routes */}
+            {/* Admin routes - placed first for priority */}
             <Route path="/admin/login" element={<AdminLogin />} />
             <Route path="/admin/reset-password" element={<ResetPassword />} />
             <Route path="/admin" element={
@@ -93,6 +85,15 @@ const App = () => (
                 <AdminAboutUsManagement />
               </ProtectedRoute>
             } />
+            
+            {/* Public routes */}
+            <Route path="/" element={<Index />} />
+            <Route path="/services" element={<Services />} />
+            <Route path="/testimonials" element={<Testimonials />} />
+            <Route path="/testimonials/:id" element={<TestimonialDetail />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/book-strategy-call" element={<BookStrategyCall />} />
             
             {/* 404 route */}
             <Route path="*" element={<NotFound />} />
