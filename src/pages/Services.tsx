@@ -8,19 +8,6 @@ import { useQuery } from '@tanstack/react-query';
 import { mapDbServiceToService, mapDbTestimonialToTestimonial } from '@/lib/dataTransformers';
 import { Testimonial } from '@/types/admin';
 
-interface Service {
-  id: string;
-  title: string;
-  short_description: string;
-  full_description: string;
-  icon: string;
-  benefits: string[];
-  features: string[];
-  case_study_id: string | null;
-  created_at: string;
-  updated_at: string;
-}
-
 const Services = () => {
   const [testimonialMap, setTestimonialMap] = useState<Record<string, Testimonial>>({});
 
@@ -37,15 +24,15 @@ const Services = () => {
         return [];
       }
       
-      return data as Service[];
+      return data.map(service => mapDbServiceToService(service));
     }
   });
 
   // Fetch testimonials for case studies
   useEffect(() => {
     const caseStudyIds = services
-      .filter(service => service.case_study_id)
-      .map(service => service.case_study_id);
+      .filter(service => service.caseStudyId)
+      .map(service => service.caseStudyId);
       
     if (caseStudyIds.length > 0) {
       const fetchTestimonials = async () => {
@@ -194,8 +181,8 @@ const Services = () => {
           
           {services.map(service => {
             // Find a related testimonial for this service if available
-            const relatedTestimonial = service.case_study_id 
-              ? testimonialMap[service.case_study_id]
+            const relatedTestimonial = service.caseStudyId 
+              ? testimonialMap[service.caseStudyId]
               : null;
               
             return (
@@ -205,7 +192,7 @@ const Services = () => {
                 className="bg-white rounded-lg shadow-lg p-8 mb-12 last:mb-0"
               >
                 <h3 className="text-2xl font-bold mb-4 text-agency-navy">{service.title}</h3>
-                <p className="text-gray-700 mb-6">{service.full_description}</p>
+                <p className="text-gray-700 mb-6">{service.fullDescription}</p>
                 
                 <div className="grid md:grid-cols-2 gap-8 mb-8">
                   <div>
