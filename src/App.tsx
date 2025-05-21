@@ -37,13 +37,14 @@ const queryClient = new QueryClient({
   },
 });
 
+// Fixed order of providers to prevent React hook errors
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <AuthProvider>
-      <TooltipProvider>
+  <BrowserRouter>
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
         <Toaster />
         <Sonner />
-        <BrowserRouter>
+        <TooltipProvider>
           <Routes>
             {/* Admin routes - placed first for priority */}
             <Route path="/admin/login" element={<AdminLogin />} />
@@ -98,10 +99,10 @@ const App = () => (
             {/* 404 route */}
             <Route path="*" element={<NotFound />} />
           </Routes>
-        </BrowserRouter>
-      </TooltipProvider>
-    </AuthProvider>
-  </QueryClientProvider>
+        </TooltipProvider>
+      </AuthProvider>
+    </QueryClientProvider>
+  </BrowserRouter>
 );
 
 export default App;
