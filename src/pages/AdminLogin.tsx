@@ -8,15 +8,27 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from 'sonner';
-import { AlertCircle } from 'lucide-react';
+import { AlertCircle, Info } from 'lucide-react';
+import { 
+  Dialog,
+  DialogContent,
+  DialogDescription, 
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger
+} from '@/components/ui/dialog';
 
 const AdminLogin = () => {
-  const { signIn, session, loading, initializeAdminUser } = useAuth();
+  const { signIn, session, loading, initializeAdminUser, resetPassword } = useAuth();
   const navigate = useNavigate();
   const [email, setEmail] = useState('admin@aiadmaxify.com');
   const [password, setPassword] = useState('Admin@123');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [loginAttempts, setLoginAttempts] = useState(0);
+  const [resetEmail, setResetEmail] = useState('');
+  const [isResetSubmitting, setIsResetSubmitting] = useState(false);
+  const [resetDialogOpen, setResetDialogOpen] = useState(false);
   
   useEffect(() => {
     // Initialize default admin user if needed
@@ -57,6 +69,32 @@ const AdminLogin = () => {
       toast.error(error.message || 'An error occurred during login');
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleResetPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!resetEmail) {
+      toast.error('Please enter your email address');
+      return;
+    }
+
+    setIsResetSubmitting(true);
+    
+    try {
+      const { success, message } = await resetPassword(resetEmail);
+      
+      if (success) {
+        toast.success(message || 'Password reset email sent successfully');
+        setResetDialogOpen(false);
+      } else {
+        toast.error(message || 'Failed to send password reset email');
+      }
+    } catch (error: any) {
+      toast.error(error.message || 'An error occurred');
+    } finally {
+      setIsResetSubmitting(false);
     }
   };
 
@@ -111,6 +149,43 @@ const AdminLogin = () => {
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <Label htmlFor="password">Password</Label>
+                  <Dialog open={resetDialogOpen} onOpenChange={setResetDialogOpen}>
+                    <DialogTrigger asChild>
+                      <Button variant="link" className="px-0 text-sm text-agency-purple">
+                        Forgot password?
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Reset Password</DialogTitle>
+                        <DialogDescription>
+                          Enter your email address and we'll send you a link to reset your password.
+                        </DialogDescription>
+                      </DialogHeader>
+                      <form onSubmit={handleResetPassword} className="space-y-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="reset-email">Email</Label>
+                          <Input
+                            id="reset-email"
+                            type="email"
+                            placeholder="Enter your email"
+                            value={resetEmail}
+                            onChange={(e) => setResetEmail(e.target.value)}
+                            required
+                          />
+                        </div>
+                        <DialogFooter>
+                          <Button 
+                            type="submit" 
+                            className="bg-agency-purple hover:bg-agency-navy"
+                            disabled={isResetSubmitting}
+                          >
+                            {isResetSubmitting ? 'Sending...' : 'Send Reset Link'}
+                          </Button>
+                        </DialogFooter>
+                      </form>
+                    </DialogContent>
+                  </Dialog>
                 </div>
                 <Input
                   id="password"

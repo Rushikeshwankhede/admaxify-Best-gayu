@@ -24,6 +24,7 @@ import AdminTestimonialsManagement from "./pages/admin/AdminTestimonialsManageme
 import AdminContactSubmissions from "./pages/admin/AdminContactSubmissions";
 import AdminStrategyCallBookings from "./pages/admin/AdminStrategyCallBookings";
 import AdminAboutUsManagement from "./pages/admin/AdminAboutUsManagement";
+import ResetPassword from "./pages/admin/ResetPassword";
 import ProtectedRoute from "./components/admin/ProtectedRoute";
 
 const queryClient = new QueryClient({
@@ -54,6 +55,7 @@ const App = () => (
             
             {/* Admin routes */}
             <Route path="/admin/login" element={<AdminLogin />} />
+            <Route path="/admin/reset-password" element={<ResetPassword />} />
             <Route path="/admin" element={
               <ProtectedRoute>
                 <AdminDashboard />
@@ -65,7 +67,7 @@ const App = () => (
               </ProtectedRoute>
             } />
             
-            {/* New Admin Management Routes */}
+            {/* Admin Management Routes */}
             <Route path="/admin/services-management" element={
               <ProtectedRoute requiredRole="editor">
                 <AdminServicesManagement />

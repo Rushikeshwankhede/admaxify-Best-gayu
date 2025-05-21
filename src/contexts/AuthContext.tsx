@@ -13,6 +13,7 @@ interface AuthContextType {
   signOut: () => Promise<void>;
   checkIsAdmin: () => Promise<boolean>;
   initializeAdminUser: () => Promise<void>;
+  resetPassword: (email: string) => Promise<{ success: boolean; message?: string }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -57,7 +58,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
               id: user.id,
               email: 'admin@aiadmaxify.com',
               role: 'administrator',
-              password_hash: 'hashed_password_placeholder' // In a real app, you'd properly hash this
+              password_hash: 'Admin@123' // In a real app, you'd properly hash this
             });
 
           if (insertError) {
@@ -185,6 +186,24 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   };
 
+  const resetPassword = async (email: string) => {
+    try {
+      const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: window.location.origin + '/admin/reset-password',
+      });
+      
+      if (error) {
+        console.error('Password reset error:', error);
+        return { success: false, message: error.message || 'Failed to send password reset email' };
+      }
+      
+      return { success: true, message: 'Password reset email has been sent' };
+    } catch (error: any) {
+      console.error('Password reset error:', error);
+      return { success: false, message: error.message || 'An unexpected error occurred' };
+    }
+  };
+
   const checkIsAdmin = async (): Promise<boolean> => {
     if (!session) return false;
     
@@ -207,6 +226,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         signOut,
         checkIsAdmin,
         initializeAdminUser,
+        resetPassword,
       }}
     >
       {children}

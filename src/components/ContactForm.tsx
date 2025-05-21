@@ -1,6 +1,7 @@
 
 import React, { useState } from 'react';
 import { Mail, User, MessageSquare, Send } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
 
 const ContactForm = () => {
   const [formData, setFormData] = useState({
@@ -26,7 +27,24 @@ const ContactForm = () => {
     setIsSubmitting(true);
     
     try {
-      // Using FormSubmit service to send emails - it's a simple service that forwards form submissions via email
+      // First, store the submission in Supabase
+      const { error: supabaseError } = await supabase
+        .from('form_submissions')
+        .insert({
+          form_type: 'contact',
+          submission_data: {
+            name: formData.name,
+            email: formData.email,
+            message: formData.message,
+            submitted_at: new Date().toISOString(),
+          },
+        });
+      
+      if (supabaseError) {
+        throw new Error(supabaseError.message);
+      }
+      
+      // Using FormSubmit service as a backup to send emails - it's a simple service that forwards form submissions via email
       const response = await fetch('https://formsubmit.co/rushiwankhede0503@gmail.com', {
         method: 'POST',
         headers: {
@@ -56,7 +74,8 @@ const ContactForm = () => {
       } else {
         throw new Error('Something went wrong with the form submission');
       }
-    } catch (error) {
+    } catch (error: any) {
+      console.error('Form submission error:', error);
       setSubmitError('Something went wrong. Please try again or email us directly.');
       
       // Reset error message after 5 seconds
