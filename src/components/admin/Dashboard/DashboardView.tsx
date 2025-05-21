@@ -2,7 +2,7 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Calendar, Mail, User, FileText, ArrowRight } from 'lucide-react';
+import { Calendar, Mail, User, FileText, ArrowRight, Users as UsersIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -244,7 +244,7 @@ const DashboardView = () => {
                   
                   <Button variant="outline" className="justify-start" asChild>
                     <Link to="/admin/about-us-management">
-                      <Users className="mr-2 h-4 w-4" /> Manage About Us
+                      <UsersIcon className="mr-2 h-4 w-4" /> Manage About Us
                     </Link>
                   </Button>
                 </>
