@@ -19,6 +19,11 @@ import NotFound from "./pages/NotFound";
 import AdminLogin from "./pages/AdminLogin";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminServices from "./pages/admin/AdminServices";
+import AdminServicesManagement from "./pages/admin/AdminServicesManagement";
+import AdminTestimonialsManagement from "./pages/admin/AdminTestimonialsManagement";
+import AdminContactSubmissions from "./pages/admin/AdminContactSubmissions";
+import AdminStrategyCallBookings from "./pages/admin/AdminStrategyCallBookings";
+import AdminAboutUsManagement from "./pages/admin/AdminAboutUsManagement";
 import ProtectedRoute from "./components/admin/ProtectedRoute";
 
 const queryClient = new QueryClient({
@@ -57,6 +62,33 @@ const App = () => (
             <Route path="/admin/services" element={
               <ProtectedRoute requiredRole="editor">
                 <AdminServices />
+              </ProtectedRoute>
+            } />
+            
+            {/* New Admin Management Routes */}
+            <Route path="/admin/services-management" element={
+              <ProtectedRoute requiredRole="editor">
+                <AdminServicesManagement />
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/testimonials-management" element={
+              <ProtectedRoute requiredRole="editor">
+                <AdminTestimonialsManagement />
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/contact-submissions" element={
+              <ProtectedRoute requiredRole="viewer">
+                <AdminContactSubmissions />
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/strategy-call-bookings" element={
+              <ProtectedRoute requiredRole="viewer">
+                <AdminStrategyCallBookings />
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/about-us-management" element={
+              <ProtectedRoute requiredRole="editor">
+                <AdminAboutUsManagement />
               </ProtectedRoute>
             } />
             

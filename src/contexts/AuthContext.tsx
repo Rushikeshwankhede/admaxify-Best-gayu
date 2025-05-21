@@ -12,6 +12,7 @@ interface AuthContextType {
   signIn: (email: string, password: string) => Promise<{ success: boolean; message?: string }>;
   signOut: () => Promise<void>;
   checkIsAdmin: () => Promise<boolean>;
+  initializeAdminUser: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -20,6 +21,56 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   const [role, setRole] = useState<AppRole | null>(null);
+
+  // Initialize admin user if it doesn't exist
+  const initializeAdminUser = async () => {
+    try {
+      // Check if admin@aiadmaxify.com exists
+      const { data: existingAdmins, error: checkError } = await supabase
+        .from('admin_users')
+        .select('id')
+        .eq('email', 'admin@aiadmaxify.com')
+        .single();
+
+      if (checkError && checkError.code !== 'PGRST116') {
+        console.error('Error checking for admin user:', checkError);
+        return;
+      }
+
+      // If admin doesn't exist, create one
+      if (!existingAdmins) {
+        const { data: { user }, error: signUpError } = await supabase.auth.signUp({
+          email: 'admin@aiadmaxify.com',
+          password: 'Admin@123',
+        });
+
+        if (signUpError) {
+          console.error('Error creating admin user:', signUpError);
+          return;
+        }
+
+        if (user) {
+          // Insert the user into admin_users table with admin role
+          const { error: insertError } = await supabase
+            .from('admin_users')
+            .insert({
+              id: user.id,
+              email: 'admin@aiadmaxify.com',
+              role: 'administrator',
+              password_hash: 'hashed_password_placeholder' // In a real app, you'd properly hash this
+            });
+
+          if (insertError) {
+            console.error('Error inserting admin user:', insertError);
+          } else {
+            console.log('Admin user created successfully');
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Error in initializeAdminUser:', error);
+    }
+  };
 
   useEffect(() => {
     // First set up the auth listener
@@ -46,6 +97,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       }
       
       setLoading(false);
+
+      // Initialize admin user
+      initializeAdminUser();
     });
 
     return () => {
@@ -152,6 +206,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         signIn,
         signOut,
         checkIsAdmin,
+        initializeAdminUser,
       }}
     >
       {children}

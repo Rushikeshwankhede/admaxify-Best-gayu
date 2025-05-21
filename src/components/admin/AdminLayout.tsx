@@ -1,226 +1,185 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { useAuth } from '@/contexts/AuthContext';
-import { 
-  LayoutDashboard, 
-  MessageSquare, 
-  Settings, 
-  Package, 
-  Users, 
-  FileText, 
-  Award,
-  LogOut, 
-  Menu,
-  ChevronDown,
-  User
-} from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { 
-  DropdownMenu, 
-  DropdownMenuContent, 
-  DropdownMenuItem, 
-  DropdownMenuLabel, 
-  DropdownMenuSeparator, 
-  DropdownMenuTrigger 
-} from '@/components/ui/dropdown-menu';
+import {
+  LayoutDashboard,
+  Settings,
+  FileText,
+  Mail,
+  LogOut,
+  Calendar,
+  ListChecks,
+  Users,
+  Award,
+  Menu,
+  X
+} from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
+import { Helmet } from 'react-helmet';
+import { toast } from 'sonner';
 
 interface AdminLayoutProps {
   children: React.ReactNode;
 }
 
 const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
-  const { signOut, session, role } = useAuth();
+  const { signOut, role } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  useEffect(() => {
-    // If not authenticated, redirect to login
-    if (!session) {
+  const handleSignOut = async () => {
+    try {
+      await signOut();
       navigate('/admin/login');
+    } catch (error) {
+      console.error('Error signing out:', error);
+      toast.error('Failed to sign out');
     }
-  }, [session, navigate]);
-
-  const isActive = (path: string) => {
-    return location.pathname === path || location.pathname.startsWith(`${path}/`);
   };
 
-  const navigationItems = [
-    { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
-    { name: 'Services', href: '/admin/services', icon: Package },
-    { name: 'Testimonials', href: '/admin/testimonials', icon: MessageSquare },
-    { name: 'Team Members', href: '/admin/team', icon: Users },
-    { name: 'Form Submissions', href: '/admin/submissions', icon: FileText },
-    { name: 'Strategy Call Bookings', href: '/admin/bookings', icon: FileText },
-    { name: 'Awards', href: '/admin/awards', icon: Award },
-    { name: 'Site Settings', href: '/admin/settings', icon: Settings },
+  const isCurrent = (path: string) => {
+    return location.pathname === path;
+  };
+
+  const canEdit = role === 'editor' || role === 'administrator';
+  const canAdmin = role === 'administrator';
+
+  const navLinks = [
+    {
+      name: 'Dashboard',
+      path: '/admin',
+      icon: <LayoutDashboard size={20} />,
+      access: true, // all roles
+    },
+    {
+      name: 'Services',
+      path: '/admin/services-management',
+      icon: <ListChecks size={20} />,
+      access: canEdit,
+    },
+    {
+      name: 'Testimonials',
+      path: '/admin/testimonials-management',
+      icon: <FileText size={20} />,
+      access: canEdit,
+    },
+    {
+      name: 'About Us',
+      path: '/admin/about-us-management',
+      icon: <Users size={20} />,
+      access: canEdit,
+    },
+    {
+      name: 'Contact Submissions',
+      path: '/admin/contact-submissions',
+      icon: <Mail size={20} />,
+      access: true, // all roles
+    },
+    {
+      name: 'Strategy Calls',
+      path: '/admin/strategy-call-bookings',
+      icon: <Calendar size={20} />,
+      access: true, // all roles
+    },
+    {
+      name: 'Settings',
+      path: '/admin/settings',
+      icon: <Settings size={20} />,
+      access: canAdmin,
+    },
   ];
 
-  // Only show Admin Users management to administrators
-  if (role === 'administrator') {
-    navigationItems.push({ 
-      name: 'Admin Users', 
-      href: '/admin/users', 
-      icon: User 
-    });
-  }
-
-  const handleLogout = async () => {
-    await signOut();
-    navigate('/admin/login');
-  };
-
-  if (!session) {
-    return null; // Don't render anything if not logged in
-  }
+  const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
 
   return (
-    <div className="flex h-screen bg-gray-50">
-      {/* Desktop Sidebar */}
-      <div className="hidden md:flex md:flex-col md:w-64 md:fixed md:inset-y-0 bg-white shadow z-10">
-        <div className="flex items-center justify-center h-16 px-4 bg-agency-navy text-white">
-          <Link to="/" className="text-xl font-bold">AIAdmaxify Admin</Link>
-        </div>
-        
-        <div className="flex flex-col flex-1 overflow-y-auto">
-          <nav className="flex-1 px-2 py-4 space-y-1">
-            {navigationItems.map((item) => (
-              <Link
-                key={item.name}
-                to={item.href}
-                className={`${
-                  isActive(item.href)
-                    ? 'bg-agency-purple bg-opacity-10 text-agency-purple'
-                    : 'text-gray-600 hover:bg-gray-100'
-                } group flex items-center px-2 py-2 text-sm font-medium rounded-md`}
-              >
-                <item.icon 
-                  className={`${
-                    isActive(item.href) ? 'text-agency-purple' : 'text-gray-400 group-hover:text-gray-500'
-                  } mr-3 flex-shrink-0 h-5 w-5`} 
-                />
-                {item.name}
-              </Link>
-            ))}
-          </nav>
-        </div>
-        
-        <div className="flex items-center p-4 border-t">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="flex items-center justify-between w-full text-left">
-                <div className="flex items-center">
-                  <div className="w-8 h-8 bg-agency-purple text-white rounded-full flex items-center justify-center">
-                    {session.user?.email?.charAt(0).toUpperCase()}
-                  </div>
-                  <span className="ml-2 text-sm font-medium truncate max-w-[120px]">
-                    {session.user?.email}
-                  </span>
-                </div>
-                <ChevronDown className="h-4 w-4 opacity-50" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56">
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem className="text-xs text-muted-foreground">
-                Role: {role || 'Loading...'}
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={handleLogout}>
-                <LogOut className="mr-2 h-4 w-4" />
-                <span>Log out</span>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-      </div>
-      
-      {/* Mobile header */}
-      <div className="md:hidden flex items-center justify-between h-16 bg-white px-4 border-b">
-        <div className="flex items-center">
-          <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-agency-purple"
+    <>
+      <Helmet>
+        <title>Admin Dashboard | AIAdmaxify</title>
+      </Helmet>
+
+      <div className="flex min-h-screen bg-gray-100">
+        {/* Mobile sidebar toggle button */}
+        <div className="lg:hidden fixed z-20 top-4 left-4">
+          <Button
+            variant="outline"
+            size="icon"
+            className="bg-white"
+            onClick={toggleSidebar}
           >
-            <Menu className="h-6 w-6" />
-          </button>
-          <div className="ml-4 font-semibold text-agency-navy">AIAdmaxify Admin</div>
+            {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
+          </Button>
         </div>
-        
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="p-2">
-              <div className="w-8 h-8 bg-agency-purple text-white rounded-full flex items-center justify-center">
-                {session.user?.email?.charAt(0).toUpperCase()}
-              </div>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>
-              <span className="truncate max-w-[200px] block">{session.user?.email}</span>
-            </DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem className="text-xs text-muted-foreground">
-              Role: {role || 'Loading...'}
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={handleLogout}>
-              <LogOut className="mr-2 h-4 w-4" />
-              <span>Log out</span>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
-      
-      {/* Mobile sidebar */}
-      {isMobileMenuOpen && (
-        <div className="fixed inset-0 flex z-40 md:hidden">
-          <div 
-            className="fixed inset-0 bg-gray-600 bg-opacity-75"
-            onClick={() => setIsMobileMenuOpen(false)}
-          />
-          <div className="relative flex-1 flex flex-col max-w-xs w-full bg-white">
-            <div className="flex-1 h-0 pt-5 pb-4 overflow-y-auto">
-              <div className="flex items-center justify-center">
-                <span className="text-xl font-bold text-agency-navy">AIAdmaxify Admin</span>
-              </div>
-              <nav className="mt-5 px-2 space-y-1">
-                {navigationItems.map((item) => (
-                  <Link
-                    key={item.name}
-                    to={item.href}
-                    className={`${
-                      isActive(item.href)
-                        ? 'bg-agency-purple bg-opacity-10 text-agency-purple'
-                        : 'text-gray-600 hover:bg-gray-100'
-                    } group flex items-center px-2 py-2 text-base font-medium rounded-md`}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    <item.icon 
-                      className={`${
-                        isActive(item.href) ? 'text-agency-purple' : 'text-gray-400 group-hover:text-gray-500'
-                      } mr-3 flex-shrink-0 h-5 w-5`} 
-                    />
-                    {item.name}
-                  </Link>
-                ))}
-              </nav>
+
+        {/* Sidebar */}
+        <div
+          className={`fixed inset-y-0 left-0 z-10 transform bg-agency-charcoal text-white w-64 transition-transform duration-200 ease-in-out lg:translate-x-0 ${
+            sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+          }`}
+        >
+          <div className="flex flex-col h-full">
+            <div className="flex items-center justify-center h-16 border-b border-gray-700">
+              <h1 className="text-xl font-bold">AIAdmaxify Admin</h1>
+            </div>
+
+            {/* Sidebar link role notice */}
+            <div className="px-4 py-2 text-xs text-gray-400">
+              Logged in as: {role}
+            </div>
+
+            <nav className="flex-1 overflow-y-auto py-4">
+              <ul className="space-y-1">
+                {navLinks.map(
+                  (link) =>
+                    link.access && (
+                      <li key={link.path}>
+                        <Link
+                          to={link.path}
+                          className={`flex items-center px-6 py-3 text-gray-300 hover:bg-gray-700 ${
+                            isCurrent(link.path) ? 'bg-gray-700 text-white' : ''
+                          }`}
+                          onClick={() => setSidebarOpen(false)}
+                        >
+                          <span className="mr-3">{link.icon}</span>
+                          {link.name}
+                        </Link>
+                      </li>
+                    )
+                )}
+              </ul>
+            </nav>
+
+            <div className="p-4 border-t border-gray-700">
+              <Button
+                variant="ghost"
+                onClick={handleSignOut}
+                className="w-full flex items-center justify-center text-gray-300 hover:bg-gray-700 hover:text-white"
+              >
+                <LogOut className="mr-2 h-4 w-4" /> Sign Out
+              </Button>
+              
+              <Link to="/" target="_blank" rel="noopener noreferrer" className="mt-4 text-center block text-sm text-gray-400 hover:text-white">
+                View Public Site
+              </Link>
             </div>
           </div>
         </div>
-      )}
-      
-      {/* Main content */}
-      <div className="md:pl-64 flex flex-col flex-1">
-        <main className="flex-1 overflow-y-auto bg-gray-50">
-          <div className="py-6 px-4 sm:px-6 lg:px-8">
-            {children}
-          </div>
-        </main>
+
+        {/* Sidebar overlay for mobile */}
+        {sidebarOpen && (
+          <div 
+            className="fixed inset-0 z-5 bg-gray-900 bg-opacity-50 lg:hidden" 
+            onClick={() => setSidebarOpen(false)}
+          />
+        )}
+
+        {/* Main content */}
+        <div className="flex-1 ml-0 lg:ml-64 transition-all duration-200">
+          <main className="p-5">{children}</main>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
