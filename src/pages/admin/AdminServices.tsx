@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 import { supabase } from '@/integrations/supabase/client';
@@ -7,6 +6,7 @@ import { toast } from 'sonner';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import ConfirmDialog from '@/components/admin/ConfirmDialog';
 import FileUpload from '@/components/admin/FileUpload';
+import { mapDbServiceToService } from '@/lib/dataTransformers';
 
 import {
   Table,
@@ -113,7 +113,9 @@ const AdminServices = () => {
         .order('created_at', { ascending: false });
       
       if (error) throw error;
-      return data as Service[];
+      
+      // Transform the database records to our frontend Service type
+      return data.map(service => mapDbServiceToService(service));
     }
   });
 

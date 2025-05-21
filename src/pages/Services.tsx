@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { BrainCircuit, Search, BarChart, Mail, Gauge, Palette, LineChart, FileText, Video, Users, MapPin, Cog } from 'lucide-react';
 import Navbar from '../components/Navbar';
@@ -6,6 +5,8 @@ import Footer from '../components/Footer';
 import { Helmet } from 'react-helmet';
 import { supabase } from '@/integrations/supabase/client';
 import { useQuery } from '@tanstack/react-query';
+import { mapDbServiceToService, mapDbTestimonialToTestimonial } from '@/lib/dataTransformers';
+import { Testimonial } from '@/types/admin';
 
 interface Service {
   id: string;
@@ -18,19 +19,6 @@ interface Service {
   case_study_id: string | null;
   created_at: string;
   updated_at: string;
-}
-
-interface Testimonial {
-  id: string;
-  name: string;
-  company: string;
-  position: string;
-  image: string;
-  testimonial: string;
-  results: {
-    before: string;
-    after: string;
-  };
 }
 
 const Services = () => {
@@ -72,7 +60,8 @@ const Services = () => {
         }
         
         const testimonialData = data.reduce((acc, testimonial) => {
-          acc[testimonial.id] = testimonial;
+          // Use the transformer to convert DB type to our frontend type
+          acc[testimonial.id] = mapDbTestimonialToTestimonial(testimonial);
           return acc;
         }, {} as Record<string, Testimonial>);
         
@@ -168,7 +157,7 @@ const Services = () => {
                   <h2 className="text-2xl font-bold mb-3">{service.title}</h2>
                   <p className="text-gray-700 mb-4 flex-grow">{service.short_description}</p>
                   
-                  {service.features && service.features.length > 0 && (
+                  {service.features && Array.isArray(service.features) && service.features.length > 0 && (
                     <>
                       <h3 className="font-bold mb-2 text-agency-navy">Key Features:</h3>
                       <ul className="list-disc list-inside text-gray-600 mb-4 pl-2">
@@ -222,7 +211,7 @@ const Services = () => {
                   <div>
                     <h4 className="text-xl font-semibold mb-4">Key Benefits:</h4>
                     <ul className="space-y-2">
-                      {service.benefits?.map((benefit, index) => (
+                      {Array.isArray(service.benefits) && service.benefits.map((benefit, index) => (
                         <li key={index} className="flex items-start">
                           <div className="bg-agency-softPurple p-1 rounded-full mr-3">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-agency-purple"><path d="M20 6 9 17l-5-5"/></svg>
@@ -236,7 +225,7 @@ const Services = () => {
                   <div>
                     <h4 className="text-xl font-semibold mb-4">What We Deliver:</h4>
                     <ul className="space-y-2">
-                      {service.features?.map((feature, index) => (
+                      {Array.isArray(service.features) && service.features.map((feature, index) => (
                         <li key={index} className="flex items-start">
                           <div className="bg-agency-softPurple p-1 rounded-full mr-3">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-agency-purple"><path d="M20 6 9 17l-5-5"/></svg>
