@@ -118,7 +118,7 @@ const AdminUsersManagement = () => {
   // Delete user mutation
   const deleteUserMutation = useMutation({
     mutationFn: async (id: string) => {
-      // Call the Edge Function to delete the user
+      // Call the delete_user Edge Function instead of RPC
       const response = await fetch(`${window.location.origin}/api/delete_user`, {
         method: 'POST',
         headers: {

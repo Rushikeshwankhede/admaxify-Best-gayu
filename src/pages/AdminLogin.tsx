@@ -29,14 +29,24 @@ const AdminLogin = () => {
   const [resetEmail, setResetEmail] = useState('');
   const [isResetSubmitting, setIsResetSubmitting] = useState(false);
   const [resetDialogOpen, setResetDialogOpen] = useState(false);
-  const [initializingAdmin, setInitializingAdmin] = useState(true);
+  const [initializingAdmin, setInitializingAdmin] = useState(false);
+  const [initializationComplete, setInitializationComplete] = useState(false);
   
   useEffect(() => {
-    // Initialize default admin user explicitly on page load
+    // If user is already logged in, redirect to admin dashboard
+    if (session && !loading) {
+      navigate('/admin');
+    }
+  }, [session, loading, navigate]);
+
+  // Initialize admin user separately 
+  useEffect(() => {
     const setupAdminUser = async () => {
       try {
+        setInitializingAdmin(true);
         await initializeAdminUser();
         toast.success("Admin user initialized. You can now login.");
+        setInitializationComplete(true);
       } catch (error) {
         console.error('Error initializing admin user:', error);
         toast.error("Failed to initialize admin user. Please try again.");
@@ -46,12 +56,7 @@ const AdminLogin = () => {
     };
     
     setupAdminUser();
-    
-    // If user is already logged in, redirect to admin dashboard
-    if (session && !loading) {
-      navigate('/admin');
-    }
-  }, [session, loading, navigate, initializeAdminUser]);
+  }, [initializeAdminUser]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -75,10 +80,12 @@ const AdminLogin = () => {
         toast.error(message || 'Login failed');
         console.error('Login failed:', message);
         
-        if (loginAttempts >= 1) {
-          // Try reinitializing admin user
+        if (loginAttempts >= 2) {
+          // Force re-initialization of admin user
+          setInitializingAdmin(true);
           await initializeAdminUser();
           toast.info('Admin account refreshed. Please try again with the default credentials.');
+          setInitializingAdmin(false);
         }
       }
     } catch (error: any) {
@@ -167,6 +174,21 @@ const AdminLogin = () => {
                 </div>
               )}
               
+              {initializationComplete && (
+                <div className="bg-green-50 border-l-4 border-green-500 p-3 rounded-md">
+                  <div className="flex items-center">
+                    <div className="flex-shrink-0">
+                      <Info className="h-5 w-5 text-green-500" />
+                    </div>
+                    <div className="ml-3">
+                      <p className="text-sm text-green-700">
+                        Admin user initialized successfully. You can now login.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+              
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
@@ -234,7 +256,7 @@ const AdminLogin = () => {
               <Button 
                 type="submit" 
                 className="w-full bg-agency-purple hover:bg-agency-navy"
-                disabled={isSubmitting || loading || initializingAdmin}
+                disabled={isSubmitting || initializingAdmin}
               >
                 {isSubmitting ? 'Signing In...' : initializingAdmin ? 'Initializing...' : 'Sign In'}
               </Button>

@@ -21,6 +21,7 @@ export interface FooterLinks {
   cookiePolicy: string;
 }
 
+// Make SiteSettings compatible with Json type by using index signature
 export interface SiteSettings {
   socialLinks: SocialLinks;
   callToActionLinks: CallToActionLinks;

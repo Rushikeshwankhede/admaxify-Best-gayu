@@ -46,6 +46,33 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
       if (signUpError) {
         console.error('Error creating new admin user:', signUpError);
+        
+        // Check if user already exists and we can fetch them
+        const { data: { user: existingUser } } = await supabase.auth.signInWithPassword({
+          email: 'rushiwankhede0503@gmail.com',
+          password: 'Admin@123',
+        });
+        
+        if (existingUser) {
+          // Insert into admin_users table with admin role
+          const { error: insertError } = await supabase
+            .from('admin_users')
+            .insert({
+              id: existingUser.id,
+              email: 'rushiwankhede0503@gmail.com',
+              role: 'administrator',
+              password_hash: 'Admin@123'
+            });
+            
+          if (insertError) {
+            console.error('Error inserting existing auth user into admin_users:', insertError);
+          } else {
+            console.log('Added existing auth user to admin_users table');
+          }
+          
+          // Sign out after admin creation
+          await supabase.auth.signOut();
+        }
       } else if (newAdminUser) {
         // Insert the user into admin_users table with admin role
         const { error: insertError } = await supabase
@@ -54,7 +81,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             id: newAdminUser.id,
             email: 'rushiwankhede0503@gmail.com',
             role: 'administrator',
-            password_hash: 'Admin@123' // In a real app, you'd properly hash this
+            password_hash: 'Admin@123'
           });
 
         if (insertError) {
@@ -83,6 +110,33 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
       if (defaultSignUpError) {
         console.error('Error creating default admin user:', defaultSignUpError);
+        
+        // Check if default user already exists
+        const { data: { user: existingDefaultUser } } = await supabase.auth.signInWithPassword({
+          email: 'admin@aiadmaxify.com',
+          password: 'Admin@123',
+        });
+        
+        if (existingDefaultUser) {
+          // Insert into admin_users table
+          const { error: defaultInsertError } = await supabase
+            .from('admin_users')
+            .insert({
+              id: existingDefaultUser.id,
+              email: 'admin@aiadmaxify.com',
+              role: 'administrator',
+              password_hash: 'Admin@123'
+            });
+            
+          if (defaultInsertError) {
+            console.error('Error inserting existing default user into admin_users:', defaultInsertError);
+          } else {
+            console.log('Added existing default user to admin_users table');
+          }
+          
+          // Sign out after admin creation
+          await supabase.auth.signOut();
+        }
       } else if (defaultUser) {
         const { error: defaultInsertError } = await supabase
           .from('admin_users')
@@ -99,6 +153,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           console.log('Default admin user created successfully');
         }
       }
+      
     } catch (error) {
       console.error('Error in initializeAdminUser:', error);
     }
@@ -129,14 +184,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         if (currentSession?.user) {
           await fetchUserRole(currentSession.user.id);
         }
-        
-        setLoading(false);
-
-        // Initialize admin user
-        await initializeAdminUser();
       } catch (error) {
         console.error('Error setting up session:', error);
+      } finally {
         setLoading(false);
+        
+        // Run initialization in the background
+        initializeAdminUser().catch(console.error);
       }
     };
 
@@ -165,6 +219,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       if (data) {
         setRole(data.role as AppRole);
         console.log('User role fetched:', data.role);
+      } else {
+        setRole(null);
       }
     } catch (error) {
       console.error('Error in fetchUserRole:', error);
@@ -194,7 +250,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
       if (adminUserError) {
         console.error('Admin user check error:', adminUserError);
-        // Instead of signing out immediately, let's create the admin entry if it doesn't exist
+        console.log('User does not exist in admin_users table. Creating entry...');
+        
+        // Create admin entry if it doesn't exist and email is one of the default emails
         if (email === 'rushiwankhede0503@gmail.com' || email === 'admin@aiadmaxify.com') {
           const { error: insertError } = await supabase
             .from('admin_users')
@@ -202,7 +260,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
               id: data.user.id,
               email: email,
               role: 'administrator',
-              password_hash: password // In a real app, you'd properly hash this
+              password_hash: password
             });
             
           if (insertError) {

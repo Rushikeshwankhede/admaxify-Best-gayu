@@ -37,7 +37,6 @@ serve(async (req) => {
     }
     
     // First delete the user from admin_users table directly
-    // This avoids foreign key constraints
     const { error: deleteAdminUserError } = await supabase
       .from('admin_users')
       .delete()
