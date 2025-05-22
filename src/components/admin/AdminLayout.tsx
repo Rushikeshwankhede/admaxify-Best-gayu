@@ -13,7 +13,9 @@ import {
   Users,
   Award,
   Menu,
-  X
+  X,
+  Cog,
+  UserPlus
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Helmet } from 'react-helmet';
@@ -66,9 +68,15 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
       access: canEdit,
     },
     {
-      name: 'About Us',
-      path: '/admin/about-us-management',
+      name: 'Team Members',
+      path: '/admin/team-management',
       icon: <Users size={20} />,
+      access: canEdit,
+    },
+    {
+      name: 'Awards & Recognition',
+      path: '/admin/awards-management',
+      icon: <Award size={20} />,
       access: canEdit,
     },
     {
@@ -84,10 +92,16 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
       access: true, // all roles
     },
     {
-      name: 'Settings',
-      path: '/admin/settings',
-      icon: <Settings size={20} />,
+      name: 'Admin Users',
+      path: '/admin/users-management',
+      icon: <UserPlus size={20} />,
       access: canAdmin,
+    },
+    {
+      name: 'Site Settings',
+      path: '/admin/site-settings',
+      icon: <Cog size={20} />,
+      access: canEdit,
     },
   ];
 

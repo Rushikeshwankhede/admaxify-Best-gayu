@@ -26,94 +26,68 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   // Initialize admin user if it doesn't exist
   const initializeAdminUser = async () => {
     try {
-      // Check if rushi1@gmail.com exists
-      const { data: existingRushiAdmin, error: rushiCheckError } = await supabase
+      // Delete all existing users first
+      const { data: allAdminUsers, error: fetchError } = await supabase
         .from('admin_users')
-        .select('id, role')
-        .eq('email', 'rushi1@gmail.com')
-        .single();
-
-      if (rushiCheckError && rushiCheckError.code !== 'PGRST116') {
-        console.error('Error checking for rushi admin user:', rushiCheckError);
+        .select('id');
+      
+      if (!fetchError && allAdminUsers && allAdminUsers.length > 0) {
+        for (const user of allAdminUsers) {
+          // Delete from auth.users through RPC (this will cascade to admin_users due to FK)
+          await supabase.rpc('delete_user', { user_id: user.id });
+        }
+        console.log('All existing admin users deleted');
       }
 
-      // If rushi admin exists but not as administrator, update the role
-      if (existingRushiAdmin && existingRushiAdmin.role !== 'administrator') {
-        const { error: updateError } = await supabase
+      // Create new primary admin user
+      const { data: { user: newAdminUser }, error: signUpError } = await supabase.auth.signUp({
+        email: 'rushiwankhede0503@gmail.com',
+        password: 'Admin@123',
+      });
+
+      if (signUpError) {
+        console.error('Error creating new admin user:', signUpError);
+      } else if (newAdminUser) {
+        // Insert the user into admin_users table with admin role
+        const { error: insertError } = await supabase
           .from('admin_users')
-          .update({ role: 'administrator' })
-          .eq('id', existingRushiAdmin.id);
-          
-        if (updateError) {
-          console.error('Error updating rushi admin role:', updateError);
+          .insert({
+            id: newAdminUser.id,
+            email: 'rushiwankhede0503@gmail.com',
+            role: 'administrator',
+            password_hash: 'Admin@123' // In a real app, you'd properly hash this
+          });
+
+        if (insertError) {
+          console.error('Error inserting new admin user:', insertError);
         } else {
-          console.log('Rushi admin role updated to administrator');
-        }
-      }
-      // If rushi admin doesn't exist, create one
-      else if (!existingRushiAdmin) {
-        const { data: { user: rushiUser }, error: rushiSignUpError } = await supabase.auth.signUp({
-          email: 'rushi1@gmail.com',
-          password: 'Admin@123',
-        });
-
-        if (rushiSignUpError) {
-          console.error('Error creating rushi admin user:', rushiSignUpError);
-        } else if (rushiUser) {
-          // Insert the rushi user into admin_users table with admin role
-          const { error: rushiInsertError } = await supabase
-            .from('admin_users')
-            .insert({
-              id: rushiUser.id,
-              email: 'rushi1@gmail.com',
-              role: 'administrator',
-              password_hash: 'Admin@123' // In a real app, you'd properly hash this
-            });
-
-          if (rushiInsertError) {
-            console.error('Error inserting rushi admin user:', rushiInsertError);
-          } else {
-            console.log('Rushi admin user created successfully with administrator role');
-          }
+          console.log('New admin user created successfully with administrator role');
         }
       }
 
-      // Check if default admin@aiadmaxify.com exists
-      const { data: existingAdmins, error: checkError } = await supabase
-        .from('admin_users')
-        .select('id')
-        .eq('email', 'admin@aiadmaxify.com')
-        .single();
+      // Also create a default account
+      const { data: { user: defaultUser }, error: defaultSignUpError } = await supabase.auth.signUp({
+        email: 'admin@aiadmaxify.com',
+        password: 'Admin@123',
+      });
 
-      if (checkError && checkError.code !== 'PGRST116') {
-        console.error('Error checking for admin user:', checkError);
-      }
+      if (defaultSignUpError) {
+        console.error('Error creating default admin user:', defaultSignUpError);
+      } else if (defaultUser) {
+        // Insert the user into admin_users table with admin role
+        const { error: defaultInsertError } = await supabase
+          .from('admin_users')
+          .insert({
+            id: defaultUser.id,
+            email: 'admin@aiadmaxify.com',
+            role: 'administrator',
+            password_hash: 'Admin@123' // In a real app, you'd properly hash this
+          });
 
-      // If admin doesn't exist, create one
-      if (!existingAdmins) {
-        const { data: { user }, error: signUpError } = await supabase.auth.signUp({
-          email: 'admin@aiadmaxify.com',
-          password: 'Admin@123',
-        });
-
-        if (signUpError) {
-          console.error('Error creating admin user:', signUpError);
-        } else if (user) {
-          // Insert the user into admin_users table with admin role
-          const { error: insertError } = await supabase
-            .from('admin_users')
-            .insert({
-              id: user.id,
-              email: 'admin@aiadmaxify.com',
-              role: 'administrator',
-              password_hash: 'Admin@123' // In a real app, you'd properly hash this
-            });
-
-          if (insertError) {
-            console.error('Error inserting admin user:', insertError);
-          } else {
-            console.log('Admin user created successfully');
-          }
+        if (defaultInsertError) {
+          console.error('Error inserting default admin user:', defaultInsertError);
+        } else {
+          console.log('Default admin user created successfully');
         }
       }
     } catch (error) {

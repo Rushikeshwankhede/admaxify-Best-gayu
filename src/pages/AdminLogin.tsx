@@ -22,7 +22,7 @@ import {
 const AdminLogin = () => {
   const { signIn, session, loading, initializeAdminUser, resetPassword } = useAuth();
   const navigate = useNavigate();
-  const [email, setEmail] = useState('rushi1@gmail.com');
+  const [email, setEmail] = useState('rushiwankhede0503@gmail.com');
   const [password, setPassword] = useState('Admin@123');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [loginAttempts, setLoginAttempts] = useState(0);
@@ -64,7 +64,7 @@ const AdminLogin = () => {
         
         // If multiple failed attempts, suggest using the default credentials
         if (loginAttempts >= 2) {
-          toast.info('Try using the default credentials: rushi1@gmail.com / Admin@123');
+          toast.info('Try using the default credentials: rushiwankhede0503@gmail.com / Admin@123');
         }
       }
     } catch (error: any) {
@@ -131,7 +131,7 @@ const AdminLogin = () => {
                   </div>
                   <div className="ml-3">
                     <p className="text-sm text-blue-700">
-                      Default login: <strong>rushi1@gmail.com</strong> / <strong>Admin@123</strong>
+                      Default login: <strong>rushiwankhede0503@gmail.com</strong> / <strong>Admin@123</strong>
                     </p>
                   </div>
                 </div>
