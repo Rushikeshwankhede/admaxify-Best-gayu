@@ -13,7 +13,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { SiteSettings } from '@/types/siteSettings';
 
 const AdminSiteSettings = () => {
-  const { settings, loading, saveSettings } = useSiteSettings();
+  const { settings, loading, updateSettings } = useSiteSettings();
   const [formData, setFormData] = useState<SiteSettings>({
     socialLinks: {
       facebook: '',
@@ -76,7 +76,7 @@ const AdminSiteSettings = () => {
     setIsSaving(true);
 
     try {
-      await saveSettings(formData);
+      await updateSettings(formData);
       toast.success('Settings saved successfully');
     } catch (error) {
       console.error('Failed to save settings:', error);
