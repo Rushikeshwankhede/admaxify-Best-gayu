@@ -1,47 +1,70 @@
 
-// Follow this setup guide to integrate the Deno language server with your editor:
+// Follow this setup guide to integrate the Deno runtime into your application:
 // https://deno.land/manual/getting_started/setup_your_environment
-// This enables autocomplete, go to definition, etc.
 
-// Handle function invocation
-Deno.serve(async (req) => {
-  const { user_id } = await req.json();
-  
-  const supabaseClient = Deno.env.get('SUPABASE_CLIENT_URL');
-  const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
-  
-  if (!supabaseClient || !supabaseKey) {
-    return new Response(
-      JSON.stringify({ error: 'Server configuration error' }),
-      { headers: { 'Content-Type': 'application/json' }, status: 500 }
-    );
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.38.4'
+
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+}
+
+serve(async (req) => {
+  // Handle CORS preflight requests
+  if (req.method === 'OPTIONS') {
+    return new Response(null, { headers: corsHeaders })
   }
 
   try {
-    const response = await fetch(`${supabaseClient}/auth/v1/admin/users/${user_id}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${supabaseKey}`
-      }
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
+    const supabaseUrl = Deno.env.get('SUPABASE_URL') || ''
+    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || ''
+    
+    // Initialize Supabase client with service role key
+    const supabase = createClient(supabaseUrl, supabaseServiceKey)
+    
+    // Get the request body
+    const { user_id } = await req.json()
+    
+    if (!user_id) {
       return new Response(
-        JSON.stringify({ error: `Failed to delete user: ${errorData.message || response.statusText}` }),
-        { headers: { 'Content-Type': 'application/json' }, status: response.status }
-      );
+        JSON.stringify({ error: 'User ID is required' }), 
+        { 
+          status: 400, 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        }
+      )
     }
-
+    
+    // Delete the user using service role permissions
+    const { error: deleteError } = await supabase.auth.admin.deleteUser(user_id)
+    
+    if (deleteError) {
+      console.error('Error deleting user:', deleteError)
+      return new Response(
+        JSON.stringify({ error: deleteError.message }), 
+        { 
+          status: 500, 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        }
+      )
+    }
+    
     return new Response(
-      JSON.stringify({ success: true }),
-      { headers: { 'Content-Type': 'application/json' } }
-    );
+      JSON.stringify({ success: true, message: 'User deleted successfully' }), 
+      { 
+        status: 200, 
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      }
+    )
   } catch (error) {
+    console.error('Unexpected error:', error)
     return new Response(
-      JSON.stringify({ error: `Error deleting user: ${error.message}` }),
-      { headers: { 'Content-Type': 'application/json' }, status: 500 }
-    );
+      JSON.stringify({ error: 'Internal server error' }), 
+      { 
+        status: 500, 
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      }
+    )
   }
-});
+})
