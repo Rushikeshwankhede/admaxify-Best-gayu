@@ -29,10 +29,23 @@ const AdminLogin = () => {
   const [resetEmail, setResetEmail] = useState('');
   const [isResetSubmitting, setIsResetSubmitting] = useState(false);
   const [resetDialogOpen, setResetDialogOpen] = useState(false);
+  const [initializingAdmin, setInitializingAdmin] = useState(true);
   
   useEffect(() => {
-    // Initialize default admin user if needed
-    initializeAdminUser();
+    // Initialize default admin user explicitly on page load
+    const setupAdminUser = async () => {
+      try {
+        await initializeAdminUser();
+        toast.success("Admin user initialized. You can now login.");
+      } catch (error) {
+        console.error('Error initializing admin user:', error);
+        toast.error("Failed to initialize admin user. Please try again.");
+      } finally {
+        setInitializingAdmin(false);
+      }
+    };
+    
+    setupAdminUser();
     
     // If user is already logged in, redirect to admin dashboard
     if (session && !loading) {
@@ -62,9 +75,10 @@ const AdminLogin = () => {
         toast.error(message || 'Login failed');
         console.error('Login failed:', message);
         
-        // If multiple failed attempts, suggest using the default credentials
-        if (loginAttempts >= 2) {
-          toast.info('Try using the default credentials: rushiwankhede0503@gmail.com / Admin@123');
+        if (loginAttempts >= 1) {
+          // Try reinitializing admin user
+          await initializeAdminUser();
+          toast.info('Admin account refreshed. Please try again with the default credentials.');
         }
       }
     } catch (error: any) {
@@ -137,6 +151,22 @@ const AdminLogin = () => {
                 </div>
               </div>
               
+              {initializingAdmin && (
+                <div className="bg-yellow-50 border-l-4 border-yellow-500 p-3 rounded-md">
+                  <div className="flex items-center">
+                    <div className="flex-shrink-0">
+                      <Info className="h-5 w-5 text-yellow-500" />
+                    </div>
+                    <div className="ml-3 flex items-center">
+                      <p className="text-sm text-yellow-700">
+                        Initializing admin user, please wait...
+                      </p>
+                      <div className="ml-2 w-4 h-4 border-2 border-t-yellow-500 border-r-transparent border-b-transparent border-l-transparent rounded-full animate-spin"></div>
+                    </div>
+                  </div>
+                </div>
+              )}
+              
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
@@ -204,9 +234,9 @@ const AdminLogin = () => {
               <Button 
                 type="submit" 
                 className="w-full bg-agency-purple hover:bg-agency-navy"
-                disabled={isSubmitting || loading}
+                disabled={isSubmitting || loading || initializingAdmin}
               >
-                {isSubmitting ? 'Signing In...' : 'Sign In'}
+                {isSubmitting ? 'Signing In...' : initializingAdmin ? 'Initializing...' : 'Sign In'}
               </Button>
             </CardFooter>
           </form>

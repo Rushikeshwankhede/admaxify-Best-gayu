@@ -26,27 +26,16 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   // Initialize admin user if it doesn't exist
   const initializeAdminUser = async () => {
     try {
-      // Delete all existing users first
-      const { data: allAdminUsers, error: fetchError } = await supabase
+      // Check if admin user already exists
+      const { data: existingAdmin, error: checkError } = await supabase
         .from('admin_users')
-        .select('id');
-      
-      if (!fetchError && allAdminUsers && allAdminUsers.length > 0) {
-        for (const user of allAdminUsers) {
-          // Delete from auth.users through Edge Function (this will cascade to admin_users due to FK)
-          const response = await fetch(`${window.location.origin}/api/delete_user`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ user_id: user.id }),
-          });
+        .select('id')
+        .eq('email', 'rushiwankhede0503@gmail.com')
+        .single();
 
-          if (!response.ok) {
-            console.error('Error deleting user:', await response.json());
-          }
-        }
-        console.log('All existing admin users deleted');
+      if (!checkError && existingAdmin) {
+        console.log('Admin user already exists, no need to create');
+        return;
       }
 
       // Create new primary admin user
@@ -75,7 +64,18 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         }
       }
 
-      // Also create a default account
+      // Create a default account
+      const { data: existingDefault, error: checkDefaultError } = await supabase
+        .from('admin_users')
+        .select('id')
+        .eq('email', 'admin@aiadmaxify.com')
+        .single();
+
+      if (!checkDefaultError && existingDefault) {
+        console.log('Default user already exists, no need to create');
+        return;
+      }
+
       const { data: { user: defaultUser }, error: defaultSignUpError } = await supabase.auth.signUp({
         email: 'admin@aiadmaxify.com',
         password: 'Admin@123',
@@ -84,14 +84,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       if (defaultSignUpError) {
         console.error('Error creating default admin user:', defaultSignUpError);
       } else if (defaultUser) {
-        // Insert the user into admin_users table with admin role
         const { error: defaultInsertError } = await supabase
           .from('admin_users')
           .insert({
             id: defaultUser.id,
             email: 'admin@aiadmaxify.com',
             role: 'administrator',
-            password_hash: 'Admin@123' // In a real app, you'd properly hash this
+            password_hash: 'Admin@123'
           });
 
         if (defaultInsertError) {
@@ -121,19 +120,27 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     );
 
     // Then check for existing session
-    supabase.auth.getSession().then(({ data: { session: currentSession } }) => {
-      setSession(currentSession);
-      
-      // Fetch role if logged in
-      if (currentSession?.user) {
-        fetchUserRole(currentSession.user.id);
-      }
-      
-      setLoading(false);
+    const setupInitialSession = async () => {
+      try {
+        const { data: { session: currentSession } } = await supabase.auth.getSession();
+        setSession(currentSession);
+        
+        // Fetch role if logged in
+        if (currentSession?.user) {
+          await fetchUserRole(currentSession.user.id);
+        }
+        
+        setLoading(false);
 
-      // Initialize admin user
-      initializeAdminUser();
-    });
+        // Initialize admin user
+        await initializeAdminUser();
+      } catch (error) {
+        console.error('Error setting up session:', error);
+        setLoading(false);
+      }
+    };
+
+    setupInitialSession();
 
     return () => {
       subscription.unsubscribe();
@@ -185,10 +192,44 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         .eq('id', data.user.id)
         .single();
 
-      if (adminUserError || !adminUserData) {
+      if (adminUserError) {
         console.error('Admin user check error:', adminUserError);
+        // Instead of signing out immediately, let's create the admin entry if it doesn't exist
+        if (email === 'rushiwankhede0503@gmail.com' || email === 'admin@aiadmaxify.com') {
+          const { error: insertError } = await supabase
+            .from('admin_users')
+            .insert({
+              id: data.user.id,
+              email: email,
+              role: 'administrator',
+              password_hash: password // In a real app, you'd properly hash this
+            });
+            
+          if (insertError) {
+            console.error('Error creating admin entry for existing auth user:', insertError);
+            await supabase.auth.signOut();
+            return { success: false, message: 'Failed to create admin access' };
+          } else {
+            console.log('Created admin entry for existing auth user');
+            setRole('administrator');
+            
+            // Update last login time
+            await supabase
+              .from('admin_users')
+              .update({ last_login: new Date().toISOString() })
+              .eq('id', data.user.id);
+              
+            return { success: true };
+          }
+        } else {
+          await supabase.auth.signOut();
+          return { success: false, message: 'You do not have admin access' };
+        }
+      }
+
+      if (!adminUserData) {
         await supabase.auth.signOut();
-        return { success: false, message: 'You do not have admin access' };
+        return { success: false, message: 'Admin user data not found' };
       }
 
       console.log('Admin user role:', adminUserData.role);
@@ -244,8 +285,19 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     if (!session) return false;
     
     try {
-      const { data } = await supabase.rpc('has_role', { _role: 'administrator' });
-      return !!data;
+      // Direct check in admin_users table
+      const { data, error } = await supabase
+        .from('admin_users')
+        .select('role')
+        .eq('id', session.user.id)
+        .single();
+        
+      if (error || !data) {
+        console.error('Error checking admin status:', error);
+        return false;
+      }
+      
+      return data.role === 'administrator';
     } catch (error) {
       console.error('Error checking admin status:', error);
       return false;

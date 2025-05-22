@@ -36,11 +36,23 @@ serve(async (req) => {
       )
     }
     
-    // Delete the user using service role permissions
+    // First delete the user from admin_users table directly
+    // This avoids foreign key constraints
+    const { error: deleteAdminUserError } = await supabase
+      .from('admin_users')
+      .delete()
+      .eq('id', user_id)
+    
+    if (deleteAdminUserError) {
+      console.error('Error deleting from admin_users:', deleteAdminUserError)
+      // Continue to delete the auth user anyway
+    }
+    
+    // Delete the user from auth.users using admin API
     const { error: deleteError } = await supabase.auth.admin.deleteUser(user_id)
     
     if (deleteError) {
-      console.error('Error deleting user:', deleteError)
+      console.error('Error deleting user from auth:', deleteError)
       return new Response(
         JSON.stringify({ error: deleteError.message }), 
         { 
