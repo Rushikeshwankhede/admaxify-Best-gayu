@@ -23,6 +23,7 @@ export interface SiteSettings {
   socialLinks: SocialLinks;
   callToActionLinks: CallToActionLinks;
   footerLinks: FooterLinks;
+  [key: string]: any; // Add index signature to make it compatible with Json type
 }
 
 export const defaultSiteSettings: SiteSettings = {

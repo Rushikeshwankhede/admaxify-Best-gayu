@@ -118,10 +118,20 @@ const AdminUsersManagement = () => {
   // Delete user mutation
   const deleteUserMutation = useMutation({
     mutationFn: async (id: string) => {
-      // Delete the user from auth.users (will cascade delete from admin_users due to foreign key)
-      const { error } = await supabase.rpc('delete_user', { user_id: id });
+      // Call the Edge Function to delete the user instead of using RPC
+      const response = await fetch(`${window.location.origin}/api/delete_user`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ user_id: id }),
+      });
       
-      if (error) throw new Error(error.message);
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to delete user');
+      }
+      
       return true;
     },
     onSuccess: () => {

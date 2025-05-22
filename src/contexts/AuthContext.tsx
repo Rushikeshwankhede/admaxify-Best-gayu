@@ -33,8 +33,18 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       
       if (!fetchError && allAdminUsers && allAdminUsers.length > 0) {
         for (const user of allAdminUsers) {
-          // Delete from auth.users through RPC (this will cascade to admin_users due to FK)
-          await supabase.rpc('delete_user', { user_id: user.id });
+          // Delete from auth.users through Edge Function (this will cascade to admin_users due to FK)
+          const response = await fetch(`${window.location.origin}/api/delete_user`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ user_id: user.id }),
+          });
+
+          if (!response.ok) {
+            console.error('Error deleting user:', await response.json());
+          }
         }
         console.log('All existing admin users deleted');
       }

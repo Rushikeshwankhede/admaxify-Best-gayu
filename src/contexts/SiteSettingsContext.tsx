@@ -34,7 +34,7 @@ export const SiteSettingsProvider: React.FC<{ children: ReactNode }> = ({ childr
               .from('site_settings')
               .insert({
                 id: 'general',
-                value: defaultSiteSettings
+                value: defaultSiteSettings as any // Cast to any to avoid type issues
               });
 
             if (insertError) {
@@ -46,7 +46,26 @@ export const SiteSettingsProvider: React.FC<{ children: ReactNode }> = ({ childr
             console.error('Error loading site settings:', error);
           }
         } else if (data) {
-          setSettings(data.value as SiteSettings);
+          // Cast to SiteSettings and ensure it has all required properties
+          const loadedSettings = data.value as any;
+          
+          // Ensure the loaded settings have all the required properties
+          const mergedSettings: SiteSettings = {
+            socialLinks: {
+              ...defaultSiteSettings.socialLinks,
+              ...(loadedSettings?.socialLinks || {})
+            },
+            callToActionLinks: {
+              ...defaultSiteSettings.callToActionLinks,
+              ...(loadedSettings?.callToActionLinks || {})
+            },
+            footerLinks: {
+              ...defaultSiteSettings.footerLinks,
+              ...(loadedSettings?.footerLinks || {})
+            }
+          };
+          
+          setSettings(mergedSettings);
         }
       } catch (error) {
         console.error('Error in loadSettings:', error);
@@ -65,7 +84,7 @@ export const SiteSettingsProvider: React.FC<{ children: ReactNode }> = ({ childr
       const { error } = await supabase
         .from('site_settings')
         .update({ 
-          value: newSettings,
+          value: newSettings as any, // Cast to any to avoid type issues
           updated_at: new Date().toISOString() 
         })
         .eq('id', 'general');
